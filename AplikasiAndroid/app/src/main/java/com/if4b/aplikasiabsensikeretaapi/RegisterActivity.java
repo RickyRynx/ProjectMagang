@@ -3,8 +3,10 @@ package com.if4b.aplikasiabsensikeretaapi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.widget.Button;
 
 public class RegisterActivity extends AppCompatActivity {
+    Button btnLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
