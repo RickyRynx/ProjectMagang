@@ -2,6 +2,7 @@ package com.if4b.aplikasiabsensikeretaapi;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -49,5 +50,11 @@ public class DBApp extends SQLiteOpenHelper {
             return false;
         else
             return true;
+    }
+
+    public Cursor login_user(String username, String password) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor res = db.rawQuery(" Select * from " + TABLE_NAME + " where USERNAME= '" + username + "' and PASSWORD= '" + password + "'", null);
+        return res;
     }
 }
