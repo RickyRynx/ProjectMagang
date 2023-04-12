@@ -10,51 +10,42 @@ import android.database.sqlite.SQLiteOpenHelper;
 import androidx.annotation.Nullable;
 
 public class DBApp extends SQLiteOpenHelper {
-    public static final String DATABASE_NAME = "DB_ricky";
-    public static final String TABLE_NAME = "user";
-    public static final String COL_2 = "USERNAME";
-    public static final String COL_3 = "PASSWORD";
-    public static final String COL_4 = "KONFIRMASI_PASSWORD";
-    public static final String COL_5 = "ALAMAT";
-    public static final String COL_6 = "JABATAN";
-    public static final String COL_7 = "NOMOR_HP";
+    private static final String DATABASE_NAME = "dbricky";
+    private static final int DATABASE_VERSION = 1;
+    public static final String TABLE_USERS = "users";
+    public static final String COLUMN_ID = "id";
+    public static final String COLUMN_USERNAME = "username";
+    public static final String COLUMN_PASSWORD = "password";
+    public static final String COLUMN_KONFIRMASI_PASSWORD = "konfirmasi_password";
+    public static final String COLUMN_ALAMAT = "alamat";
+    public static final String COLUMN_JABATAN = "jabatan";
+    public static final String COLUMN_NOMOR_HP = "nomor_hp";
+
+    private static final String CREATE_TABLE_USERS = "CREATE TABLE " + TABLE_USERS + "("
+            + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+            + COLUMN_USERNAME + " TEXT,"
+            + COLUMN_PASSWORD + " TEXT,"
+            + COLUMN_KONFIRMASI_PASSWORD + " TEXT,"
+            + COLUMN_ALAMAT + " TEXT,"
+            + COLUMN_JABATAN + " TEXT,"
+            + COLUMN_NOMOR_HP + " TEXT"
+            + ")";
 
     public DBApp(@Nullable Context context) {
-        super(context, DATABASE_NAME, null, 1);
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
 
     @Override
-    public void onCreate(SQLiteDatabase db) {
-        db.execSQL("Create Table " + TABLE_NAME + "(ID INTEGER PRIMARY KEY AUTOINCREMENT, USERNAME TEXT, PASSWORD TEXT, KONFIRMASI_PASSWORD TEXT, ALAMAT TEXT, JABATAN TEXT, NOMOR_HP TEXT)");
-
+    public void onCreate(SQLiteDatabase dbricky) {
+        dbricky.execSQL(CREATE_TABLE_USERS);
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int i, int i1) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
-        onCreate(db);
+    public void onUpgrade(SQLiteDatabase dbricky, int oldVersion, int newVersion) {
+        dbricky.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
+        onCreate(dbricky);
     }
 
-    public boolean insertData(String username, String password, String konfirmasi_password, String alamat, String jabatan, String nomor_hp) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues ContentValues = new ContentValues();
-        ContentValues.put(COL_2, username);
-        ContentValues.put(COL_3, password);
-        ContentValues.put(COL_4, konfirmasi_password);
-        ContentValues.put(COL_5, alamat);
-        ContentValues.put(COL_6, jabatan);
-        ContentValues.put(COL_7, nomor_hp);
-        long result = db.insert(TABLE_NAME, null, ContentValues);
-        if (result == -1)
-            return false;
-        else
-            return true;
-    }
 
-    public Cursor login_user(String username, String password) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor res = db.rawQuery(" Select * from " + TABLE_NAME + " where USERNAME= '" + username + "' and PASSWORD= '" + password + "'", null);
-        return res;
-    }
 }
