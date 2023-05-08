@@ -16,6 +16,7 @@ public class RegisterActivity extends AppCompatActivity {
     private Button btnLogin;
     private EditText etUsername, etPassword, etKonfirmasiPassword, etAlamat, etJabatan, etNoHp;
     private Button btnReg;
+    private DBApp dbApp;
     private SQLiteDatabase dbricky;
 
     @Override
@@ -32,8 +33,8 @@ public class RegisterActivity extends AppCompatActivity {
         btnReg = findViewById(R.id.btn_register);
         DBApp dbApp = new DBApp(this);
         dbricky = dbApp.getWritableDatabase();
-        
-        Register_user();
+
+
 
         btnLogin = findViewById(R.id.btn_login);
         btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -43,10 +44,7 @@ public class RegisterActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-    }
 
-
-    private void Register_user() {
         btnReg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -56,6 +54,8 @@ public class RegisterActivity extends AppCompatActivity {
                 String alamat = etAlamat.getText().toString().trim();
                 String jabatan = etJabatan.getText().toString().trim();
                 String noHp = etNoHp.getText().toString().trim();
+
+                ContentValues values = new ContentValues();
 
                 if (username.isEmpty()) {
                     etUsername.setError("Username tidak boleh kosong");
@@ -73,34 +73,28 @@ public class RegisterActivity extends AppCompatActivity {
                     etJabatan.setError("Jabatan tidak boleh kosong");
                     etJabatan.requestFocus();
                 } else if (noHp.isEmpty()) {
-                    etNoHp.setError("Password tidak boleh kosong");
+                    etNoHp.setError("Nomor HP tidak boleh kosong");
                     etNoHp.requestFocus();
                 } else {
-                    Cursor cursor = dbricky.rawQuery("SELECT * FROM " + DBApp.TABLE_USERS + " WHERE "
-                            + DBApp.COLUMN_USERNAME + " = ?", new String[]{username});
-                    if (cursor.getCount() > 0) {
-                        Toast.makeText(RegisterActivity.this, "Username sudah terdaftar", Toast.LENGTH_SHORT).show();
-                    } else {
-                        ContentValues values = new ContentValues();
                         values.put(DBApp.COLUMN_USERNAME, username);
                         values.put(DBApp.COLUMN_PASSWORD, password);
-                        values.put(DBApp.COLUMN_USERNAME, konfirmasiPassword);
-                        values.put(DBApp.COLUMN_PASSWORD, alamat);
-                        values.put(DBApp.COLUMN_USERNAME, jabatan);
-                        values.put(DBApp.COLUMN_PASSWORD, noHp);
-                        dbricky.insert(DBApp.TABLE_USERS, null, values);
+                        values.put(DBApp.COLUMN_KONFIRMASI_PASSWORD, konfirmasiPassword);
+                        values.put(DBApp.COLUMN_ALAMAT, alamat);
+                        values.put(DBApp.COLUMN_JABATAN, jabatan);
+                        values.put(DBApp.COLUMN_NOMOR_HP, noHp);
+                        dbApp.insertData(values);
                         Toast.makeText(RegisterActivity.this, "Registrasi berhasil", Toast.LENGTH_SHORT).show();
                         finish();
                     }
-                    cursor.close();
-                }
             }
         });
     }
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
+        dbApp.close();
         dbricky.close();
+        super.onDestroy();
     }
+
 }
