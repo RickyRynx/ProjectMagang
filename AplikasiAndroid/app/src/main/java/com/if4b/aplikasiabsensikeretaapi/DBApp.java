@@ -11,60 +11,63 @@ import androidx.annotation.Nullable;
 
 public class DBApp extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "db_absen";
-    private static final int DATABASE_VERSION = 1;
-    public static final String TABLE_USERS = "users";
-    public static final String COLUMN_ID = "id";
-    public static final String COLUMN_USERNAME = "username";
-    public static final String COLUMN_PASSWORD = "password";
-    public static final String COLUMN_KONFIRMASI_PASSWORD = "konfirmasi_password";
-    public static final String COLUMN_ALAMAT = "alamat";
-    public static final String COLUMN_JABATAN = "jabatan";
-    public static final String COLUMN_NOMOR_HP = "nomor_hp";
 
-    private SQLiteDatabase dbricky;
-
-    private static final String CREATE_TABLE_USERS = "CREATE TABLE " + TABLE_USERS + "("
-            + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + COLUMN_USERNAME + " TEXT,"
-            + COLUMN_PASSWORD + " TEXT,"
-            + COLUMN_KONFIRMASI_PASSWORD + " TEXT,"
-            + COLUMN_ALAMAT + " TEXT,"
-            + COLUMN_JABATAN + " TEXT,"
-            + COLUMN_NOMOR_HP + " TEXT"
-            + ")";
 
     public DBApp(@Nullable Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        super(context, DATABASE_NAME, null, 1);
     }
 
 
     @Override
     public void onCreate(SQLiteDatabase dbricky) {
-        dbricky.execSQL(CREATE_TABLE_USERS);
+        dbricky.execSQL("CREATE TABLE allusers(username Text primary key, password text, konfirmasi_password Text, alamat Text, jabatan Text, no_hp Text)");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase dbricky, int oldVersion, int newVersion) {
-        dbricky.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
-        onCreate(dbricky);
+        dbricky.execSQL("DROP TABLE IF EXISTS allusers");
     }
 
 
-    public void insertData(ContentValues values){
-        dbricky.insert(TABLE_USERS, null, values);
+    public Boolean insertData(String username, String password, String konfirmasi, String alamat, String jabatan, String noHp) {
+        SQLiteDatabase dbricky = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("username", username);
+        contentValues.put("password", password);
+        contentValues.put("konfirmasi_password", konfirmasi);
+        contentValues.put("alamat", alamat);
+        contentValues.put("jabatan", jabatan);
+        contentValues.put("no_hp", noHp);
+
+        long result = dbricky.insert("allusers", null, contentValues);
+        if (result == -1) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
-    public boolean checkUser(String username, String password, String konfirmasi_password, String alamat, String jabatan, String noHp) {
-        SQLiteDatabase dbricky = this.getReadableDatabase();
 
-        Cursor cursor = dbricky.rawQuery("SELECT * FROM " + TABLE_USERS + " WHERE " + COLUMN_USERNAME + " = ? AND " + COLUMN_PASSWORD + " = ? AND " + COLUMN_KONFIRMASI_PASSWORD + " = ? AND " + COLUMN_ALAMAT + " = ? AND " + COLUMN_JABATAN + " = ? AND " + COLUMN_NOMOR_HP + " =?", new String[]{username, password, konfirmasi_password, alamat, jabatan, noHp});
+    public boolean checkUsername(String username) {
+        SQLiteDatabase dbricky = this.getWritableDatabase();
 
-        int count = cursor.getCount();
+        Cursor cursor = dbricky.rawQuery("SELECT * FROM allusers where username = ?", new String[]{username});
 
-        cursor.close();
-        dbricky.close();
 
-        if (count > 0) {
+        if (cursor.getCount() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean checkPassword(String username, String password) {
+        SQLiteDatabase dbricky = this.getWritableDatabase();
+
+        Cursor cursor = dbricky.rawQuery("SELECT * FROM allusers where username = ? and password = ?", new String[]{username, password});
+
+
+        if (cursor.getCount() > 0) {
             return true;
         } else {
             return false;

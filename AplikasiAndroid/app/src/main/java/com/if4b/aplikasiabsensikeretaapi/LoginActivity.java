@@ -13,9 +13,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 public class LoginActivity extends AppCompatActivity {
-    private EditText etUsername, etPassword, etKonfirmasiPassword, etAlamat, etJabatan, etNoHP;
+    private EditText etUsername, etPassword;
     private Button btnLogin, btnRegister;
-    private SQLiteDatabase dbricky;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +27,6 @@ public class LoginActivity extends AppCompatActivity {
         btnRegister = findViewById(R.id.btn_register);
 
         DBApp dbApp = new DBApp(this);
-        dbricky = dbApp.getWritableDatabase();
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
 
@@ -36,16 +34,19 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String username = etUsername.getText().toString();
                 String password = etPassword.getText().toString();
-                String konfirmasi_password = etKonfirmasiPassword.getText().toString();
-                String alamat = etAlamat.getText().toString();
-                String jabatan = etJabatan.getText().toString();
-                String noHp = etNoHP.getText().toString();
-                Boolean res = dbApp.checkUser(username, password, konfirmasi_password, alamat, jabatan, noHp);
-                if(res == true){
-                    Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+
+                if(username.equals("") || password.equals("")){
+                    Toast.makeText(LoginActivity.this, "Kolom Harus Diisi!!", Toast.LENGTH_SHORT).show();
                 }else {
-                    Toast.makeText(LoginActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
+                    Boolean checkCredential = dbApp.checkPassword(username, password);
+
+                    if (checkCredential == true) {
+                        Toast.makeText(LoginActivity.this, "Login Berhasil", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                    } else {
+                        Toast.makeText(LoginActivity.this, "Login Gagal", Toast.LENGTH_SHORT).show();
+                    }
+
                 }
             }
         });

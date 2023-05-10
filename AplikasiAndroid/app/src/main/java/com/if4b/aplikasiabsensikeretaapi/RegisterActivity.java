@@ -16,8 +16,7 @@ public class RegisterActivity extends AppCompatActivity {
     private Button btnLogin;
     private EditText etUsername, etPassword, etKonfirmasiPassword, etAlamat, etJabatan, etNoHp;
     private Button btnReg;
-    private DBApp dbApp;
-    private SQLiteDatabase dbricky;
+   DBApp helper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,8 +30,7 @@ public class RegisterActivity extends AppCompatActivity {
         etJabatan = findViewById(R.id.et_jabatan);
         etNoHp = findViewById(R.id.et_nomor_hp);
         btnReg = findViewById(R.id.btn_register);
-        DBApp dbApp = new DBApp(this);
-        dbricky = dbApp.getWritableDatabase();
+        helper = new DBApp(this);
 
 
 
@@ -55,7 +53,6 @@ public class RegisterActivity extends AppCompatActivity {
                 String jabatan = etJabatan.getText().toString().trim();
                 String noHp = etNoHp.getText().toString().trim();
 
-                ContentValues values = new ContentValues();
 
                 if (username.isEmpty()) {
                     etUsername.setError("Username tidak boleh kosong");
@@ -76,25 +73,28 @@ public class RegisterActivity extends AppCompatActivity {
                     etNoHp.setError("Nomor HP tidak boleh kosong");
                     etNoHp.requestFocus();
                 } else {
-                        values.put(DBApp.COLUMN_USERNAME, username);
-                        values.put(DBApp.COLUMN_PASSWORD, password);
-                        values.put(DBApp.COLUMN_KONFIRMASI_PASSWORD, konfirmasiPassword);
-                        values.put(DBApp.COLUMN_ALAMAT, alamat);
-                        values.put(DBApp.COLUMN_JABATAN, jabatan);
-                        values.put(DBApp.COLUMN_NOMOR_HP, noHp);
-                        dbApp.insertData(values);
-                        Toast.makeText(RegisterActivity.this, "Registrasi berhasil", Toast.LENGTH_SHORT).show();
-                        finish();
+                        if (password.equals(konfirmasiPassword)) {
+                            Boolean checkUserName = helper.checkUsername(username);
+
+                            if (checkUserName == false) {
+                                Boolean insert = helper.insertData(username, password, konfirmasiPassword, alamat, jabatan, noHp);
+
+                                if (insert == true) {
+                                    Toast.makeText(RegisterActivity.this, "Registrasi Berhasil!!", Toast.LENGTH_SHORT).show();
+                                    startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                                } else {
+                                    Toast.makeText(RegisterActivity.this, "Registrasi Gagal!!", Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                Toast.makeText(RegisterActivity.this, "Username Telah Digunakan", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(RegisterActivity.this, "Password Salah", Toast.LENGTH_SHORT).show();
+                        }
                     }
             }
         });
     }
 
-    @Override
-    protected void onDestroy() {
-        dbApp.close();
-        dbricky.close();
-        super.onDestroy();
-    }
 
 }
