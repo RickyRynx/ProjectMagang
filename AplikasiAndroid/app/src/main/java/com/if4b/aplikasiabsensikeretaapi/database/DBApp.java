@@ -1,4 +1,4 @@
-package com.if4b.aplikasiabsensikeretaapi;
+package com.if4b.aplikasiabsensikeretaapi.database;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -9,7 +9,15 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
+import com.if4b.aplikasiabsensikeretaapi.model.ModelUser;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
+
 public class DBApp extends SQLiteOpenHelper {
+
+
     private static final String DATABASE_NAME = "db_absen";
 
 
@@ -72,6 +80,35 @@ public class DBApp extends SQLiteOpenHelper {
         } else {
             return false;
         }
+    }
+
+    public ArrayList<ModelUser> getUserDetails(String users){
+        ArrayList<ModelUser> model = new ArrayList<>();
+        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+        String query = "SELECT * FROM allusers WHERE username='"+users+"'";
+        Cursor cursor = sqLiteDatabase.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            String username = cursor.getString(0);
+            String password = cursor.getString(1);
+            String konfirmasi = cursor.getString(2);
+            String alamat = cursor.getString(3);
+            String jabatan = cursor.getString(4);
+            String noHp = cursor.getString(5);
+
+            ModelUser modelUser = new ModelUser();
+
+            modelUser.setUsername(username);
+            modelUser.setPassword(password);
+            modelUser.setKonfirmasi(konfirmasi);
+            modelUser.setAlamat(alamat);
+            modelUser.setJabatan(jabatan);
+            modelUser.setNomor(noHp);
+
+            model.add(modelUser);
+
+        }
+        return model;
     }
 
 

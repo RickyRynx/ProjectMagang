@@ -1,157 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFF00"
-    tools:context=".MainActivity">
+    tools:context=".view.MainActivity">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="4dp"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
+    
+    <RelativeLayout
+        android:id="@+id/ll_home"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
 
         <ImageView
-            android:id="@+id/iv_home"
-            android:layout_width="match_parent"
+            android:id="@+id/iv_profil"
+            android:layout_width="70dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
-            android:src="@mipmap/ic_launcher" />
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="50dp"
+            android:src="@mipmap/ic_launcher"/>
 
         <TextView
-            android:id="@+id/tv_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Selamat Datang"
-            android:textAlignment="center"
-            android:textSize="24sp"
-            android:textStyle="bold" />
+        android:id="@+id/tv_welcome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/iv_profil"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="50dp"
+        android:text="Selamat Datang"/>
 
         <TextView
             android:id="@+id/tv_nama"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="24sp"
-            android:textStyle="bold" />
-
-
-        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="60dp"
-            android:layout_marginTop="20dp">
+            android:layout_toRightOf="@id/iv_profil"
+            android:layout_below="@id/tv_welcome"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            />
 
-            <ImageButton
-                android:id="@+id/ib_kehadiran"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:src="@mipmap/ic_launcher" />
+        <TextView
+            android:id="@+id/tv_jbt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/iv_profil"
+            android:layout_below="@id/tv_nama"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            />
 
-            <ImageButton
-                android:id="@+id/ib_pulang"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_marginLeft="90dp"
-                android:layout_toRightOf="@+id/ib_kehadiran"
-                android:src="@mipmap/ic_launcher" />
+    </RelativeLayout>
 
-            <ImageButton
-                android:id="@+id/ib_date"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_below="@id/ib_kehadiran"
-                android:layout_marginTop="10dp"
-                android:src="@mipmap/ic_launcher" />
+    </ScrollView>
 
-            <ImageButton
-                android:id="@+id/ib_maps"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_below="@id/ib_kehadiran"
-                android:layout_marginLeft="90dp"
-                android:layout_marginTop="10dp"
-                android:layout_toRightOf="@id/ib_date"
-                android:src="@mipmap/ic_launcher" />
-
-            <ImageButton
-                android:id="@+id/ib_data"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_below="@id/ib_date"
-                android:layout_marginTop="10dp"
-                android:src="@mipmap/ic_launcher" />
-
-            <ImageButton
-                android:id="@+id/ib_notifikasi"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_below="@id/ib_maps"
-                android:layout_marginLeft="90dp"
-                android:layout_marginTop="10dp"
-                android:layout_toRightOf="@id/ib_data"
-                android:src="@mipmap/ic_launcher" />
-
-
-        </RelativeLayout>
-
-
-        <RelativeLayout
-            android:id="@+id/ll_footer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="bottom"
-            android:layout_marginTop="95dp"
-            android:background="@color/white"
-            android:orientation="vertical">
-
-            <ImageButton
-                android:id="@+id/ib_beranda"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginTop="5dp"
-                android:src="@mipmap/ic_launcher" />
-
-            <ImageButton
-                android:id="@+id/ib_profil"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="25dp"
-                android:layout_marginTop="5dp"
-                android:layout_toRightOf="@id/ib_beranda"
-                android:src="@mipmap/ic_launcher" />
-
-            <ImageButton
-                android:id="@+id/ib_camera"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="25dp"
-                android:layout_marginTop="5dp"
-                android:layout_toRightOf="@id/ib_profil"
-                android:src="@mipmap/ic_launcher" />
-
-            <ImageButton
-                android:id="@+id/ib_absensi"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="25dp"
-                android:layout_marginTop="5dp"
-                android:layout_toRightOf="@id/ib_camera"
-                android:src="@mipmap/ic_launcher" />
-
-            <ImageButton
-                android:id="@+id/ib_detail"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="25dp"
-                android:layout_marginTop="5dp"
-                android:layout_toRightOf="@id/ib_absensi"
-                android:src="@mipmap/ic_launcher" />
-        </RelativeLayout>
-
-    </LinearLayout>
-
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

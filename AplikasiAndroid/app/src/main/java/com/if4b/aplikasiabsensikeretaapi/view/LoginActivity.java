@@ -1,20 +1,21 @@
-package com.if4b.aplikasiabsensikeretaapi;
+package com.if4b.aplikasiabsensikeretaapi.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.if4b.aplikasiabsensikeretaapi.R;
+import com.if4b.aplikasiabsensikeretaapi.database.DBApp;
+
 public class LoginActivity extends AppCompatActivity {
     private EditText etUsername, etPassword;
     private Button btnLogin, btnRegister;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +36,7 @@ public class LoginActivity extends AppCompatActivity {
                 String username = etUsername.getText().toString();
                 String password = etPassword.getText().toString();
 
+
                 if(username.equals("") || password.equals("")){
                     Toast.makeText(LoginActivity.this, "Kolom Harus Diisi!!", Toast.LENGTH_SHORT).show();
                 }else {
@@ -42,7 +44,9 @@ public class LoginActivity extends AppCompatActivity {
 
                     if (checkCredential == true) {
                         Toast.makeText(LoginActivity.this, "Login Berhasil", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        intent.putExtra("user", username);
+                        startActivity(intent);
                     } else {
                         Toast.makeText(LoginActivity.this, "Login Gagal", Toast.LENGTH_SHORT).show();
                     }
