@@ -1,4 +1,4 @@
-package com.if4b.aplikasiabsensikeretaapi.database;
+package com.if4b.aplikasiabsensikeretaapi;
 
 import android.content.ContentValues;
 import android.content.Context;

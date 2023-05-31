@@ -10,7 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.if4b.aplikasiabsensikeretaapi.R;
-import com.if4b.aplikasiabsensikeretaapi.database.DBApp;
+import com.if4b.aplikasiabsensikeretaapi.DBApp;
 
 public class RegisterActivity extends AppCompatActivity {
     private Button btnLogin;
