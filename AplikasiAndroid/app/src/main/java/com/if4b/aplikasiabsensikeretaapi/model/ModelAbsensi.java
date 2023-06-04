@@ -1,5 +1,7 @@
 package com.if4b.aplikasiabsensikeretaapi.model;
 
+import java.sql.Blob;
+
 public class ModelAbsensi {
 
     private String nama;
@@ -7,11 +9,25 @@ public class ModelAbsensi {
     private String jamMasuk;
     private String jamKeluar;
 
-    public ModelAbsensi(String nama, String tanggal, String jamMasuk, String jamKeluar) {
+    private String jabatan;
+    private String lokasi;
+    private String kota;
+    private String negara;
+    private String latitude;
+    private String longitude;
+    private Blob image;
+
+    public ModelAbsensi() {
         this.nama = nama;
         this.tanggal = tanggal;
         this.jamMasuk = jamMasuk;
         this.jamKeluar = jamKeluar;
+        this.jabatan = jabatan;
+        this.lokasi = lokasi;
+        this.kota = kota;
+        this.negara = negara;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
 
@@ -47,14 +63,59 @@ public class ModelAbsensi {
         this.jamKeluar = jamKeluar;
     }
 
-    @Override
-    public String toString() {
-        return "Absensi{" +
-                "nama='" + nama + '\'' +
-                ", tanggal='" + tanggal + '\'' +
-                ", jamMasuk='" + jamMasuk + '\'' +
-                ", jamKeluar='" + jamKeluar + '\'' +
-                '}';
+    public String getJabatan() {
+        return jabatan;
     }
 
+    public void setJabatan(String jabatan) {
+        this.jabatan = jabatan;
+    }
+
+    public String getLokasi() {
+        return lokasi;
+    }
+
+    public void setLokasi(String lokasi) {
+        this.lokasi = lokasi;
+    }
+
+    public Blob getImage() {
+        return image;
+    }
+
+    public void setImage(Blob image) {
+        this.image = image;
+    }
+
+    public String getKota() {
+        return kota;
+    }
+
+    public void setKota(String kota) {
+        this.kota = kota;
+    }
+
+    public String getNegara() {
+        return negara;
+    }
+
+    public void setNegara(String negara) {
+        this.negara = negara;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
 }

@@ -69,25 +69,38 @@
             android:layout_marginTop="80dp"
             android:layout_centerInParent="true">
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
             <TextView
                 android:id="@+id/tvTanggal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/tvHari"
-                android:textSize="18sp"
+                android:textSize="16sp"
+                android:layout_toRightOf="@id/tvHari"
+                android:layout_marginLeft="10dp"
+                android:text="Tanggal"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvHari"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:text="Hari"/>
 
             <TextView
                 android:id="@+id/tvJam"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="16sp" />
+                android:layout_below="@id/tvHari"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:text="Jam"/>
+
+            </RelativeLayout>
 
         </androidx.cardview.widget.CardView>
 

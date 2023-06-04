@@ -6,18 +6,118 @@
     android:layout_height="match_parent"
     tools:context=".AbsensiMasukActivity">
 
+    <EditText
+        android:id="@+id/et_nama"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:hint="Nama"/>
+
+    <EditText
+        android:id="@+id/et_jabatan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:hint="Jabatan"
+        android:layout_below="@id/et_nama"/>
+
+    <EditText
+        android:id="@+id/et_tanggal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Tanggal"
+        android:layout_below="@id/et_jabatan"/>
+
+    <ImageView
+        android:id="@+id/iv_absen"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="true"
+        android:src="@mipmap/ic_launcher"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="20dp"
+        android:layout_below="@id/et_tanggal"/>
+
     <Button
         android:id="@+id/btnCapture"
+        android:layout_below="@+id/iv_absen"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Open Camera"
         />
+    
+    <TextView
+        android:id="@+id/tv_alamat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Alamat"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_below="@+id/btnCapture"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:textColor="#00FF00"/>
+
+    <TextView
+        android:id="@+id/tv_kota"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Kota"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_below="@+id/tv_alamat"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:textColor="#00FF00"/>
+
+    <TextView
+        android:id="@+id/tv_negara"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Negara"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_below="@+id/tv_kota"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:textColor="#00FF00"/>
+
+    <TextView
+        android:id="@+id/tv_latitude"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Latitude"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_below="@+id/tv_negara"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:textColor="#00FF00"/>
+
+    <TextView
+        android:id="@+id/tv_longitude"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Longitude"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_below="@+id/tv_latitude"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:textColor="#00FF00"/>
 
     <Button
         android:id="@+id/btnUpload"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/btnCapture"
-        android:text="Get Location" />
+        android:layout_below="@id/tv_longitude"
+        android:text="Get Location"/>
+
+    <Button
+        android:id="@+id/btnAbsen"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btnUpload"
+        android:text="Silahkan Absen Masuk"/>
 
 </RelativeLayout>
