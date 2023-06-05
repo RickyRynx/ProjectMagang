@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
@@ -28,10 +29,10 @@ import androidx.core.content.ContextCompat;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.if4b.aplikasiabsensikeretaapi.view.LoginActivity;
-import com.if4b.aplikasiabsensikeretaapi.view.MainActivity;
-import com.if4b.aplikasiabsensikeretaapi.view.RegisterActivity;
 
+
+
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -45,6 +46,8 @@ public class AbsensiMasukActivity extends AppCompatActivity {
     EditText etNama, etJabatan, etTanggal;
     Calendar myCalendar;
     ImageView ivAbsen;
+    private ByteArrayOutputStream byteArrayOutputStream;
+    private Byte imageByte;
     Button btnUpload, btnGet, btnAbsen;
 
     private static final int REQUEST_CODE = 100;
@@ -72,6 +75,11 @@ public class AbsensiMasukActivity extends AppCompatActivity {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         DBApp helper = new DBApp(this);
 
+        
+
+
+
+
         btnGet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -88,40 +96,30 @@ public class AbsensiMasukActivity extends AppCompatActivity {
         });
 
         btnAbsen.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                byte[] imageByte = stream.toByteArray();
                 String nama = etNama.getText().toString();
                 String jabatan = etJabatan.getText().toString();
                 String tanggal = etTanggal.getText().toString();
                 String lokasi = tvAlamat.getText().toString();
                 String kota = tvKota.getText().toString();
                 String negara = tvNegara.getText().toString();
-                String longitude = tvKota.getText().toString();
-                String latitude = tvNegara.getText().toString();
+                String latitude = tvLatitude.getText().toString();
+                String longitude = tvLongitude.getText().toString();
 
-
-                if (nama.isEmpty()) {
-                    etNama.setError("Nama tidak boleh kosong");
-                    etNama.requestFocus();
-                } else if (jabatan.isEmpty()) {
-                    etJabatan.setError("Jabatan tidak boleh kosong");
-                    etJabatan.requestFocus();
-                } else if (tanggal.isEmpty()) {
-                    etTanggal.setError("Tanggal tidak boleh kosong");
-                    etTanggal.requestFocus();
-                }  else {
-                    Boolean isInserted = helper.insertAbsen(nama, jabatan, tanggal, lokasi, kota, negara, longitude, latitude);
-
-                    if (isInserted == true) {
-                        Toast.makeText(AbsensiMasukActivity.this, "Absensi Berhasil", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                        intent.putExtra("name", nama);
-                        startActivity(intent);
-                    } else {
-                        Toast.makeText(AbsensiMasukActivity.this, "Absensi Gagal", Toast.LENGTH_SHORT).show();
-                    }
+                boolean isInserted = helper.insertAbsen(nama, jabatan, tanggal, lokasi, kota, negara, latitude, longitude, imageByte);
+                if (isInserted) {
+                    Toast.makeText(AbsensiMasukActivity.this, "Absen Berhasil", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(AbsensiMasukActivity.this, "Absen Gagal", Toast.LENGTH_SHORT).show();
                 }
+
+
             }
+
         });
 
 

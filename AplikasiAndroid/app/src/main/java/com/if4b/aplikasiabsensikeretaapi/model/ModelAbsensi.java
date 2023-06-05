@@ -28,6 +28,7 @@ public class ModelAbsensi {
         this.negara = negara;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.image = image;
     }
 
 
@@ -118,4 +119,5 @@ public class ModelAbsensi {
     public void setLongitude(String longitude) {
         this.longitude = longitude;
     }
+
 }

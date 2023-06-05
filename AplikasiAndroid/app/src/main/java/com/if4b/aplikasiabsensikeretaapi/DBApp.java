@@ -11,7 +11,6 @@ import androidx.annotation.Nullable;
 import com.if4b.aplikasiabsensikeretaapi.model.ModelAbsensi;
 import com.if4b.aplikasiabsensikeretaapi.model.ModelUser;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 
@@ -19,6 +18,7 @@ public class DBApp extends SQLiteOpenHelper {
 
 
     private static final String DATABASE_NAME = "db_absen";
+
 
 
 
@@ -30,13 +30,14 @@ public class DBApp extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase dbricky) {
         dbricky.execSQL("CREATE TABLE allusers(username Text primary key, password text, konfirmasi_password Text, alamat Text, jabatan Text, no_hp Text)");
-
+        dbricky.execSQL("CREATE TABLE adminabsen(image blob primary key, nama text, jabatan text, tanggal text, lokasi text)");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase dbricky, int oldVersion, int newVersion) {
         dbricky.execSQL("DROP TABLE IF EXISTS allusers");
         dbricky.execSQL("DROP TABLE IF EXISTS adminabsen");
+
     }
 
 
@@ -114,9 +115,10 @@ public class DBApp extends SQLiteOpenHelper {
         return model;
     }
 
-    public boolean insertAbsen(String nama, String jabatan, String tanggal, String lokasi, String kota, String negara, String longitude, String latitude) {
-        SQLiteDatabase dbricky = getReadableDatabase();
+    public boolean insertAbsen(String nama, String jabatan, String tanggal, String lokasi, String kota, String negara, String latitude, String longitude, byte[] imageBytes) {
+        SQLiteDatabase dbricky = getWritableDatabase();
         ContentValues contentValues = new ContentValues();
+
 
         contentValues.put("nama", nama);
         contentValues.put("jabatan", jabatan);
@@ -126,6 +128,7 @@ public class DBApp extends SQLiteOpenHelper {
         contentValues.put("negara", negara);
         contentValues.put("latitude", latitude);
         contentValues.put("longitude", longitude);
+        contentValues.put("image", imageBytes);
 
         long result = dbricky.insert("adminabsen", null, contentValues);
         if (result == -1) {
@@ -151,6 +154,7 @@ public class DBApp extends SQLiteOpenHelper {
             String negara = cursor.getString(5);
             String latitude = cursor.getString(6);
             String longitude = cursor.getString(7);
+            byte[] image = cursor.getBlob(8);
 
             ModelAbsensi modelAbsensi = new ModelAbsensi();
 
