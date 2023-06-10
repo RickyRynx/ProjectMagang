@@ -2,10 +2,11 @@ package com.if4b.aplikasiabsensikeretaapi;
 
 import android.Manifest;
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -28,14 +29,24 @@ import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.if4b.aplikasiabsensikeretaapi.model.ModelAbsensiMasuk;
+import com.if4b.aplikasiabsensikeretaapi.view.MainActivity;
 
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -46,9 +57,14 @@ public class AbsensiMasukActivity extends AppCompatActivity {
     EditText etNama, etJabatan, etTanggal;
     Calendar myCalendar;
     ImageView ivAbsen;
-    private ByteArrayOutputStream byteArrayOutputStream;
-    private Byte imageByte;
+    Uri imageUri;
+    private StorageReference storageReference;
+    private FirebaseStorage storage;
     Button btnUpload, btnGet, btnAbsen;
+    ProgressDialog progressDialog;
+    Bitmap bitmap;
+    private DatabaseReference reference;
+    FirebaseDatabase database;
 
     private static final int REQUEST_CODE = 100;
     private static final int CAMERA_REQUEST_CODE = 200;
@@ -73,9 +89,12 @@ public class AbsensiMasukActivity extends AppCompatActivity {
         btnAbsen = findViewById(R.id.btnAbsen);
         myCalendar = Calendar.getInstance();
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        DBApp helper = new DBApp(this);
+        reference = FirebaseDatabase.getInstance().getReference("ModelAbsensiMasuk");
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
 
-        
+
+
 
 
 
@@ -99,24 +118,28 @@ public class AbsensiMasukActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                byte[] imageByte = stream.toByteArray();
                 String nama = etNama.getText().toString();
                 String jabatan = etJabatan.getText().toString();
                 String tanggal = etTanggal.getText().toString();
-                String lokasi = tvAlamat.getText().toString();
+                String alamat = tvAlamat.getText().toString();
                 String kota = tvKota.getText().toString();
                 String negara = tvNegara.getText().toString();
                 String latitude = tvLatitude.getText().toString();
                 String longitude = tvLongitude.getText().toString();
+                String poto = "image_" + System.currentTimeMillis() + ".jpg";
 
-                boolean isInserted = helper.insertAbsen(nama, jabatan, tanggal, lokasi, kota, negara, latitude, longitude, imageByte);
-                if (isInserted) {
-                    Toast.makeText(AbsensiMasukActivity.this, "Absen Berhasil", Toast.LENGTH_SHORT).show();
+                if (nama.isEmpty()) {
+                    etNama.setError("Nama tidak boleh kosong");
+                    etNama.requestFocus();
+                } else if (jabatan.isEmpty()) {
+                    etJabatan.setError("Jabatan tidak boleh kosong");
+                    etJabatan.requestFocus();
+                } else if (tanggal.isEmpty()) {
+                    etTanggal.setError("Tanggal Minimum 6 Karakter");
+                    etTanggal.requestFocus();
                 } else {
-                    Toast.makeText(AbsensiMasukActivity.this, "Absen Gagal", Toast.LENGTH_SHORT).show();
+                    absenIn(nama, jabatan, tanggal, alamat, kota, negara, latitude, longitude, poto);
                 }
-
 
             }
 
@@ -137,6 +160,63 @@ public class AbsensiMasukActivity extends AppCompatActivity {
             new DatePickerDialog(AbsensiMasukActivity.this, date, myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH)).show();
         });
     }
+
+    private void absenIn(String nama, String jabatan, String tanggal, String alamat, String kota, String negara, String latitude, String longitude, String poto) {
+        Bitmap bitmap = ((BitmapDrawable) ivAbsen.getDrawable()).getBitmap();
+        ByteArrayOutputStream baOs = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baOs);
+        byte[] imageByte = baOs.toByteArray();
+        database = FirebaseDatabase.getInstance();
+        ModelAbsensiMasuk modelAbsensiMasuk = new ModelAbsensiMasuk();
+        StorageReference imageRef = storageReference.child(poto);
+        reference = database.getReference("modelAbsensiMasuk");
+        reference.push().setValue(modelAbsensiMasuk);
+
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("nama", nama);
+        map.put("jabatan", jabatan);
+        map.put("tanggal", tanggal);
+        map.put("poto", poto);
+        map.put("alamat",alamat);
+        map.put("kota", kota);
+        map.put("negara", negara);
+        map.put("latitude", latitude);
+        map.put("longitude", longitude);
+
+        reference.setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                UploadTask uploadTask = imageRef.putBytes(imageByte);
+                uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        imageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                String downloadUrl = uri.toString();
+                            }
+                        });
+                    }
+                });
+
+                if (task.isSuccessful()) {
+                    Intent intent = new Intent(AbsensiMasukActivity.this, MainActivity.class);
+                    Toast.makeText(AbsensiMasukActivity.this, "Absensi Berhasil!!", Toast.LENGTH_SHORT).show();
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                progressDialog.dismiss();
+                Toast.makeText(AbsensiMasukActivity.this, "Absensi Gagal!!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
 
 
     private void getLastLocation() {
@@ -202,4 +282,5 @@ public class AbsensiMasukActivity extends AppCompatActivity {
         SimpleDateFormat dateFormat = new SimpleDateFormat(myFormat, Locale.US);
         etTanggal.setText(dateFormat.format(myCalendar.getTime()));
     }
+
 }

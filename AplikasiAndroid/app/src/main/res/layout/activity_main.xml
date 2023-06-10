@@ -183,7 +183,7 @@
         <androidx.cardview.widget.CardView
             android:layout_width="200dp"
             android:layout_height="1dp"
-            app:cardBackgroundColor="@color/black"
+            app:cardBackgroundColor="#000000"
             android:layout_below="@id/tv_notifikasi"/>
 
 

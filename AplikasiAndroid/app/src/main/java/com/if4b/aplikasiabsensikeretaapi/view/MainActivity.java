@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
 import com.if4b.aplikasiabsensikeretaapi.AbsensiKeluarActivity;
 import com.if4b.aplikasiabsensikeretaapi.AbsensiMasukActivity;
 import com.if4b.aplikasiabsensikeretaapi.R;
@@ -24,6 +25,8 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity {
     String user;
     TextView username, jabatan, tvHari, tvTanggal, tvJam;
+    private DatabaseReference reference;
+
      Button btnMasuk, btnKeluar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
         btnKeluar = findViewById(R.id.btn_out);
 
         user = getIntent().getStringExtra("user");
-        getUsers();
 
         btnMasuk.setOnClickListener(new View.OnClickListener() {
 
@@ -71,15 +73,6 @@ public class MainActivity extends AppCompatActivity {
         tvTanggal.setText(dateFormat.format(date));
         tvJam.setText(clockFormat.format(date));
 
-    }
-
-    public void getUsers() {
-        DBApp helper = new DBApp(this);
-        ArrayList<ModelUser> modelUsers = helper.getUserDetails(user);
-        ModelUser models = modelUsers.get(0);
-
-        username.setText(models.getUsername());
-        jabatan.setText(models.getJabatan());
     }
 
 

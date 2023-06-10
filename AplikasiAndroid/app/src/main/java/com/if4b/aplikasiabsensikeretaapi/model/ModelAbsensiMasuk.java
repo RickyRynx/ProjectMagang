@@ -1,34 +1,31 @@
 package com.if4b.aplikasiabsensikeretaapi.model;
 
-import java.sql.Blob;
-
-public class ModelAbsensi {
+public class ModelAbsensiMasuk {
 
     private String nama;
     private String tanggal;
     private String jamMasuk;
     private String jamKeluar;
-
     private String jabatan;
     private String lokasi;
     private String kota;
     private String negara;
     private String latitude;
     private String longitude;
-    private Blob image;
+    private String poto;
 
-    public ModelAbsensi() {
-        this.nama = nama;
-        this.tanggal = tanggal;
+    public ModelAbsensiMasuk() {
+        this.nama = this.nama;
+        this.tanggal = this.tanggal;
+        this.poto = this.poto;
         this.jamMasuk = jamMasuk;
         this.jamKeluar = jamKeluar;
-        this.jabatan = jabatan;
+        this.jabatan = this.jabatan;
         this.lokasi = lokasi;
-        this.kota = kota;
-        this.negara = negara;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.image = image;
+        this.kota = this.kota;
+        this.negara = this.negara;
+        this.latitude = this.latitude;
+        this.longitude = this.longitude;
     }
 
 
@@ -46,6 +43,14 @@ public class ModelAbsensi {
 
     public void setTanggal(String tanggal) {
         this.tanggal = tanggal;
+    }
+
+    public String getPoto() {
+        return poto;
+    }
+
+    public void setPoto(String poto) {
+        this.poto = poto;
     }
 
     public String getJamMasuk() {
@@ -78,14 +83,6 @@ public class ModelAbsensi {
 
     public void setLokasi(String lokasi) {
         this.lokasi = lokasi;
-    }
-
-    public Blob getImage() {
-        return image;
-    }
-
-    public void setImage(Blob image) {
-        this.image = image;
     }
 
     public String getKota() {

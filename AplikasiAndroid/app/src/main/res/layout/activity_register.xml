@@ -35,6 +35,19 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/et_email_register"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Email"
+                android:inputType="text"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_passwordreg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -119,7 +132,7 @@
             android:layout_marginTop="8dp"
             android:text="Sudah Pernah Daftar? Silahkan Langsung Login!"
             android:textAllCaps="false"
-            android:textColor="@color/purple_500"
+            android:textColor="#0000FF"
             android:textSize="14sp"/>
     </LinearLayout>
 

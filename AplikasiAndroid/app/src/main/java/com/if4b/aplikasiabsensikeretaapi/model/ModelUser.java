@@ -1,13 +1,14 @@
 package com.if4b.aplikasiabsensikeretaapi.model;
 
 public class ModelUser {
-    String username, password, konfirmasi, alamat, jabatan, nomor;
+    String username, email, password, konfirmasi, alamat, jabatan, nomor;
 
     public ModelUser() {
     }
 
     public ModelUser(String username, String password, String konfirmasi, String alamat, String jabatan, String nomor) {
         this.username = username;
+        this.email = email;
         this.password = password;
         this.konfirmasi = konfirmasi;
         this.alamat = alamat;
@@ -21,6 +22,14 @@ public class ModelUser {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {

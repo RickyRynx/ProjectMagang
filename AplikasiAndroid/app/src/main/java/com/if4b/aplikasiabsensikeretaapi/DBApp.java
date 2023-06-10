@@ -1,6 +1,5 @@
 package com.if4b.aplikasiabsensikeretaapi;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -8,10 +7,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
-import com.if4b.aplikasiabsensikeretaapi.model.ModelAbsensi;
-import com.if4b.aplikasiabsensikeretaapi.model.ModelUser;
-
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class DBApp extends SQLiteOpenHelper {
@@ -29,150 +26,68 @@ public class DBApp extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase dbricky) {
-        dbricky.execSQL("CREATE TABLE allusers(username Text primary key, password text, konfirmasi_password Text, alamat Text, jabatan Text, no_hp Text)");
-        dbricky.execSQL("CREATE TABLE adminabsen(image blob primary key, nama text, jabatan text, tanggal text, lokasi text)");
+        final String SQL_CREATE_TABLE = "CREATE TABLE allusers (id INTEGER PRIMARY KEY autoincrement, username TEXT NOT NULL,  email TEXT NOT NULL, password TEXT NOT NULL, konfirmasi_password TEXT NOT NULL, alamat TEXT NOT NULL, jabatan TEXT NOT NULL, ho_hp TEXT NOT NULL)";
+        dbricky.execSQL(SQL_CREATE_TABLE);
+
+        final String CREATE_TABLE = "CREATE TABLE adminabsens (id INTEGER PRIMARY KEY autoincrement, nama TEXT NOT NULL, jabatan TEXT NOT NULL, tanggal TEXT NOT NULL, image blob, lokasi TEXT NOT NULL)";
+        dbricky.execSQL(CREATE_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase dbricky, int oldVersion, int newVersion) {
         dbricky.execSQL("DROP TABLE IF EXISTS allusers");
-        dbricky.execSQL("DROP TABLE IF EXISTS adminabsen");
-
+        dbricky.execSQL("DROP TABLE IF EXISTS adminabsens");
+        onCreate(dbricky);
     }
 
 
-    public Boolean insertData(String username, String password, String konfirmasi, String alamat, String jabatan, String noHp) {
+    public ArrayList<HashMap <String, String>> getAll() {
+        ArrayList<HashMap<String, String>> list = new ArrayList<>();
+        String QUERY = "SELECT * FROM allusers";
         SQLiteDatabase dbricky = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put("username", username);
-        contentValues.put("password", password);
-        contentValues.put("konfirmasi_password", konfirmasi);
-        contentValues.put("alamat", alamat);
-        contentValues.put("jabatan", jabatan);
-        contentValues.put("no_hp", noHp);
-
-        long result = dbricky.insert("allusers", null, contentValues);
-        if (result == -1) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-
-    public boolean checkUsername(String username) {
-        SQLiteDatabase dbricky = this.getWritableDatabase();
-
-        Cursor cursor = dbricky.rawQuery("SELECT * FROM allusers where username = ?", new String[]{username});
-
-
-        if (cursor.getCount() > 0) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public boolean checkPassword(String username, String password) {
-        SQLiteDatabase dbricky = this.getWritableDatabase();
-
-        Cursor cursor = dbricky.rawQuery("SELECT * FROM allusers where username = ? and password = ?", new String[]{username, password});
-
-
-        if (cursor.getCount() > 0) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public ArrayList<ModelUser> getUserDetails(String users) {
-        ArrayList<ModelUser> model = new ArrayList<>();
-        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
-        String query = "SELECT * FROM allusers WHERE username='" + users + "'";
-        Cursor cursor = sqLiteDatabase.rawQuery(query, null);
+        Cursor cursor = dbricky.rawQuery(QUERY, null);
 
         if (cursor.moveToFirst()) {
-            String username = cursor.getString(0);
-            String password = cursor.getString(1);
-            String konfirmasi = cursor.getString(2);
-            String alamat = cursor.getString(3);
-            String jabatan = cursor.getString(4);
-            String noHp = cursor.getString(5);
-
-            ModelUser modelUser = new ModelUser();
-
-            modelUser.setUsername(username);
-            modelUser.setPassword(password);
-            modelUser.setKonfirmasi(konfirmasi);
-            modelUser.setAlamat(alamat);
-            modelUser.setJabatan(jabatan);
-            modelUser.setNomor(noHp);
-
-            model.add(modelUser);
+            do {
+                HashMap<String, String> map = new HashMap<>();
+                map.put("id", cursor.getString(0));
+                map.put("username", cursor.getString(1));
+                map.put("email", cursor.getString(2));
+                map.put("password", cursor.getString(3));
+                map.put("konfirmasi_password", cursor.getString(4));
+                map.put("alamat", cursor.getString(5));
+                map.put("jabatan", cursor.getString(6));
+                map.put("no_hp", cursor.getString(7));
+                list.add(map);
+            } while (cursor.moveToFirst());
 
         }
-        return model;
+        cursor.close();
+        return list;
     }
 
-    public boolean insertAbsen(String nama, String jabatan, String tanggal, String lokasi, String kota, String negara, String latitude, String longitude, byte[] imageBytes) {
-        SQLiteDatabase dbricky = getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-
-
-        contentValues.put("nama", nama);
-        contentValues.put("jabatan", jabatan);
-        contentValues.put("tanggal", tanggal);
-        contentValues.put("lokasi", lokasi);
-        contentValues.put("kota", kota);
-        contentValues.put("negara", negara);
-        contentValues.put("latitude", latitude);
-        contentValues.put("longitude", longitude);
-        contentValues.put("image", imageBytes);
-
-        long result = dbricky.insert("adminabsen", null, contentValues);
-        if (result == -1) {
-            return false;
-        } else {
-            return true;
-        }
-
-    }
-
-    public ArrayList<ModelAbsensi> getAbsenDetails(String absens) {
-        ArrayList<ModelAbsensi> modelAbsens = new ArrayList<>();
-        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
-        String query = "SELECT * FROM allusers WHERE name='" + absens + "'";
-        Cursor cursor = sqLiteDatabase.rawQuery(query, null);
+    public ArrayList<HashMap <String, String>> getAbsen() {
+        ArrayList<HashMap<String, String>> list = new ArrayList<>();
+        String QUERY = "SELECT * FROM adminabsens";
+        SQLiteDatabase dbricky = this.getWritableDatabase();
+        Cursor cursor = dbricky.rawQuery(QUERY, null);
 
         if (cursor.moveToFirst()) {
-            String nama = cursor.getString(0);
-            String jabatan = cursor.getString(1);
-            String tanggal = cursor.getString(2);
-            String lokasi = cursor.getString(3);
-            String kota = cursor.getString(4);
-            String negara = cursor.getString(5);
-            String latitude = cursor.getString(6);
-            String longitude = cursor.getString(7);
-            byte[] image = cursor.getBlob(8);
-
-            ModelAbsensi modelAbsensi = new ModelAbsensi();
-
-            modelAbsensi.setNama(nama);
-            modelAbsensi.setJabatan(jabatan);
-            modelAbsensi.setTanggal(tanggal);
-            modelAbsensi.setLokasi(lokasi);
-            modelAbsensi.setKota(kota);
-            modelAbsensi.setNegara(negara);
-            modelAbsensi.setLatitude(latitude);
-            modelAbsensi.setLongitude(longitude);
-
-
-            modelAbsens.add(modelAbsensi);
+            do {
+                HashMap<String, String> map = new HashMap<>();
+                map.put("id", cursor.getString(0));
+                map.put("nama", cursor.getString(1));
+                map.put("jabatan", cursor.getString(2));
+                map.put("tanggal", cursor.getString(3));
+                map.put("poto", cursor.getString(4));
+                list.add(map);
+            } while (cursor.moveToFirst());
 
         }
-        return modelAbsens;
+        cursor.close();
+        return list;
     }
-
 
 }
+
+
