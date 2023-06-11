@@ -16,13 +16,20 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.auth.User;
 import com.if4b.aplikasiabsensikeretaapi.DBApp;
 import com.if4b.aplikasiabsensikeretaapi.R;
+import com.if4b.aplikasiabsensikeretaapi.model.ModelUser;
 
 
 public class LoginActivity extends AppCompatActivity {
     private EditText etEmail, etPassword;
     private Button btnLogin, btnRegister;
+
     ProgressDialog progressDialog;
     FirebaseAuth mAuth;
     FirebaseUser mUser;
@@ -40,6 +47,7 @@ public class LoginActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(this);
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
+
 
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -66,6 +74,7 @@ public class LoginActivity extends AppCompatActivity {
     private void loginAuth() {
         String email = etEmail.getText().toString();
         String password = etPassword.getText().toString();
+        ModelUser modelUser = new ModelUser();
 
         if (email.isEmpty()) {
             etPassword.setError("Password tidak boleh kosong");
@@ -75,7 +84,6 @@ public class LoginActivity extends AppCompatActivity {
             etPassword.requestFocus();
         } else {
             progressDialog.setMessage("Login...");
-            progressDialog.setTitle("Login Berhasil!!");
             progressDialog.setCanceledOnTouchOutside(false);
             progressDialog.show();
             

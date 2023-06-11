@@ -4,7 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     tools:context=".view.LoginActivity">
+
+    <ImageView
+        android:layout_width="135dp"
+        android:layout_height="105dp"
+        android:background="@drawable/bumn"
+        android:layout_alignParentRight="true"/>
+
 
     <LinearLayout
         android:id="@+id/ll_login"
@@ -18,7 +26,7 @@
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:layout_gravity="center"
-            android:src="@mipmap/ic_launcher"
+            android:src="@drawable/logo_kai"
             android:layout_marginTop="30dp"
             android:layout_marginBottom="30dp"/>
 

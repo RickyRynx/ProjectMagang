@@ -6,7 +6,7 @@ public class ModelUser {
     public ModelUser() {
     }
 
-    public ModelUser(String username, String password, String konfirmasi, String alamat, String jabatan, String nomor) {
+    public ModelUser(String username, String email, String password, String konfirmasi, String alamat, String jabatan, String nomor) {
         this.username = username;
         this.email = email;
         this.password = password;
@@ -72,3 +72,4 @@ public class ModelUser {
         this.nomor = nomor;
     }
 }
+

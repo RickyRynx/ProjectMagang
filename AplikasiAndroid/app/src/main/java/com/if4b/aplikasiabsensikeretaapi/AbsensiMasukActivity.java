@@ -66,6 +66,7 @@ public class AbsensiMasukActivity extends AppCompatActivity {
     private DatabaseReference reference;
     FirebaseDatabase database;
 
+
     private static final int REQUEST_CODE = 100;
     private static final int CAMERA_REQUEST_CODE = 200;
 
@@ -135,7 +136,7 @@ public class AbsensiMasukActivity extends AppCompatActivity {
                     etJabatan.setError("Jabatan tidak boleh kosong");
                     etJabatan.requestFocus();
                 } else if (tanggal.isEmpty()) {
-                    etTanggal.setError("Tanggal Minimum 6 Karakter");
+                    etTanggal.setError("Tanggal Tidak Boleh Kosong");
                     etTanggal.requestFocus();
                 } else {
                     absenIn(nama, jabatan, tanggal, alamat, kota, negara, latitude, longitude, poto);
@@ -147,6 +148,7 @@ public class AbsensiMasukActivity extends AppCompatActivity {
 
 
         DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 myCalendar.set(Calendar.YEAR, year);
@@ -172,6 +174,7 @@ public class AbsensiMasukActivity extends AppCompatActivity {
         reference = database.getReference("modelAbsensiMasuk");
         reference.push().setValue(modelAbsensiMasuk);
 
+
         HashMap<String, Object> map = new HashMap<>();
         map.put("nama", nama);
         map.put("jabatan", jabatan);
@@ -181,7 +184,7 @@ public class AbsensiMasukActivity extends AppCompatActivity {
         map.put("kota", kota);
         map.put("negara", negara);
         map.put("latitude", latitude);
-        map.put("longitude", longitude);
+        map.put("longitude" ,longitude);
 
         reference.setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -231,11 +234,11 @@ public class AbsensiMasukActivity extends AppCompatActivity {
                                 List<Address> addresses = null;
                                 try {
                                     addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-                                    tvLatitude.setText("latitude :" + addresses.get(0).getLatitude());
-                                    tvLongitude.setText("Longitude :" + addresses.get(0).getLongitude());
-                                    tvAlamat.setText("Alamat :" + addresses.get(0).getAddressLine(0));
-                                    tvKota.setText("Kota :" + addresses.get(0).getLocality());
-                                    tvNegara.setText("Negara :" + addresses.get(0).getCountryName());
+                                    tvLatitude.setText("" + addresses.get(0).getLatitude());
+                                    tvLongitude.setText("" + addresses.get(0).getLongitude());
+                                    tvAlamat.setText(addresses.get(0).getAddressLine(0));
+                                    tvKota.setText(addresses.get(0).getLocality());
+                                    tvNegara.setText(addresses.get(0).getCountryName());
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }

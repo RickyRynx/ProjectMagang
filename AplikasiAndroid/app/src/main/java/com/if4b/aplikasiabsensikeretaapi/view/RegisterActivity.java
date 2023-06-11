@@ -21,7 +21,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.if4b.aplikasiabsensikeretaapi.R;
-import com.if4b.aplikasiabsensikeretaapi.DBApp;
 import com.if4b.aplikasiabsensikeretaapi.model.ModelUser;
 
 import java.util.HashMap;
@@ -109,7 +108,6 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void registerAuth(String username, String email, String password, String konfirmasiPassword, String alamat, String jabatan, String noHp) {
         progressDialog.setMessage("Loading Registrasi...");
-        progressDialog.setTitle("Registrasi Berhasil!!");
         progressDialog.show();
         database = FirebaseDatabase.getInstance();
         ModelUser modelUser = new ModelUser();
