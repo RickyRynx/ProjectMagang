@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".view.MainActivity">
+    
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="270dp"
+        android:background="@drawable/background_view"/>
 
     <ScrollView
     android:layout_width="match_parent"
@@ -12,7 +17,7 @@
 
 
     <RelativeLayout
-        android:id="@+id/ll_home"
+        android:id="@+id/rl_home"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -20,10 +25,10 @@
         <ImageView
             android:id="@+id/iv_profil"
             android:layout_width="70dp"
-            android:layout_height="wrap_content"
+            android:layout_height="70dp"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="50dp"
-            android:src="@mipmap/ic_launcher"/>
+            android:src="@drawable/users"/>
 
         <TextView
             android:id="@+id/tv_welcome"
@@ -32,7 +37,9 @@
             android:layout_toRightOf="@id/iv_profil"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="50dp"
-            android:text="Selamat Datang"/>
+            android:text="Selamat Datang"
+            android:textSize="16sp"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/tv_nama"
@@ -44,7 +51,7 @@
             android:layout_marginTop="5dp"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:textColor="#FFFF00"
+            android:textColor="#000000"
             />
 
         <TextView
@@ -57,7 +64,7 @@
             android:layout_marginTop="5dp"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:textColor="#ffff00"
+            android:textColor="#000000"
             />
 
 
@@ -67,7 +74,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/iv_profil"
-            android:layout_marginTop="80dp"
+            android:layout_marginTop="100dp"
             android:layout_centerInParent="true">
 
             <RelativeLayout
@@ -107,95 +114,176 @@
 
         </androidx.cardview.widget.CardView>
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cv_absen1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_below="@id/cv_day"
-            android:layout_marginTop="75dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginBottom="20dp">
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="35dp"
+            android:layout_marginEnd="25dp"
+            android:layout_marginBottom="25dp"
+            android:columnCount="2"
+            android:rowCount="3">
 
-
-            <TextView
-                android:id="@+id/tv_in"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_out"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Silahkan Absen Masuk"
-                android:layout_gravity="center"
-                android:layout_marginBottom="20dp"
-                android:textSize="14sp"
-                android:textStyle="bold"/>
+                android:layout_row="1"
+                android:layout_rowWeight="2"
+                android:layout_column="1"
+                android:layout_columnWeight="1"
+                android:elevation="10dp"
+                app:cardCornerRadius="15dp">
 
-            <Button
-                android:id="@+id/btn_in"
+                <LinearLayout
+                    android:id="@+id/ll_out"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/iv_out"
+                        android:layout_width="50dp"
+                        android:layout_height="90dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/gambar_absen_keluar"
+                        />
+
+
+                    <TextView
+                        android:id="@+id/tv_out"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="Absen Keluar"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_in"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Absen Masuk"
-                android:textStyle="bold"
-                android:textSize="10sp"
-                android:layout_marginTop="15dp"/>
+                android:layout_row="1"
+                android:layout_rowWeight="1"
+                android:layout_column= "0"
+                android:layout_columnWeight="1"
+                android:elevation="10dp"
+                app:cardCornerRadius="15dp">
 
-        </androidx.cardview.widget.CardView>
+                <LinearLayout
+                    android:id="@+id/ll_in"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:orientation="vertical">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cv_absen2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/cv_day"
-            android:layout_marginTop="75dp"
-            android:layout_toRightOf="@id/cv_absen1"
-            android:layout_marginLeft="50dp"
-            android:layout_marginBottom="20dp">
+                    <ImageView
+                        android:id="@+id/iv_in"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/gambar_absen_masuk"
+                        />
 
-            <TextView
-                android:id="@+id/tv_out"
+
+                    <TextView
+                        android:id="@+id/tv_in"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="Absen Masuk"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_hist"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Silahkan Absen Keluar"
-                android:layout_marginBottom="20dp"
-                android:textSize="14sp"
-                android:textStyle="bold"/>
+                android:layout_row="2"
+                android:layout_rowWeight="1"
+                android:layout_column= "0"
+                android:layout_columnWeight="1"
+                android:elevation="10dp"
+                app:cardCornerRadius="15dp">
 
-            <Button
-                android:id="@+id/btn_out"
+                <LinearLayout
+
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/iv_hist"
+                        android:layout_width="60dp"
+                        android:layout_height="90dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/baseline_history_24"
+                        />
+
+
+                    <TextView
+                        android:id="@+id/tv_hist"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="History"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_sett"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Absen Keluar"
-                android:textStyle="bold"
-                android:textSize="10sp"
-                android:layout_marginTop="15dp"/>
+                android:layout_row="2"
+                android:layout_rowWeight="2"
+                android:layout_column="1"
+                android:layout_columnWeight="1"
+                android:elevation="10dp"
+                app:cardCornerRadius="15dp">
 
-        </androidx.cardview.widget.CardView>
+                <LinearLayout
+                    android:id="@+id/ll_sett"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/iv_sett"
+                        android:layout_width="50dp"
+                        android:layout_height="90dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_setting"
+                        />
 
 
-        <TextView
-            android:id="@+id/tv_notifikasi"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Notifikasi"
-            android:textStyle="bold"
-            android:textSize="20sp"
-            android:layout_marginLeft="10dp"
-            android:layout_below="@id/iv_profil"
-            android:layout_marginTop="350dp"/>
+                    <TextView
+                        android:id="@+id/tv_sett"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="Pengaturan"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
 
-        <androidx.cardview.widget.CardView
-            android:layout_width="200dp"
-            android:layout_height="1dp"
-            app:cardBackgroundColor="#000000"
-            android:layout_below="@id/tv_notifikasi"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
-        
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bottom_nav"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"/>
-
+        </GridLayout>
 
 
 
@@ -204,4 +292,4 @@
 
 </ScrollView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

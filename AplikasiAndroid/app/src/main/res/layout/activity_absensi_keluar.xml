@@ -6,25 +6,38 @@
     android:layout_height="match_parent"
     tools:context=".AbsensiKeluarActivity">
 
-    <TextView
-        android:id="@+id/tvNama"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Nama:" />
 
     <EditText
         android:id="@+id/etNama"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tvNama"
-        android:hint="Masukkan nama" />
+        android:hint="Masukkan nama"
+        android:layout_marginTop="10dp" />
+
+    <EditText
+        android:id="@+id/etJbt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/etNama"
+        android:hint="Masukkan Jabatan"
+        android:layout_marginTop="10dp"/>
+
+    <EditText
+        android:id="@+id/etTgl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/etJbt"
+        android:hint="Masukkan Tanggal"
+        android:layout_marginTop="10dp"/>
+
+
 
     <Button
         android:id="@+id/btnAbsenKeluar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/etNama"
+        android:layout_below="@id/etTgl"
         android:text="Absen Keluar"
-        android:onClick="absenKeluar" />
+        android:layout_marginTop="10dp"/>
 
 </RelativeLayout>

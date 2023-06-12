@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,6 +29,7 @@ import java.util.HashMap;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
+    ImageView ivIn, ivOut, ivHist, ivSett;
     TextView username, jabatan, tvHari, tvTanggal, tvJam;
     private DatabaseReference reference;
     private FirebaseAuth firebaseAuth;
@@ -46,27 +48,30 @@ public class MainActivity extends AppCompatActivity {
         tvHari = findViewById(R.id.tvHari);
         tvJam = findViewById(R.id.tvJam);
         tvTanggal = findViewById(R.id.tvTanggal);
-        btnMasuk = findViewById(R.id.btn_in);
-        btnKeluar = findViewById(R.id.btn_out);
+        ivIn = findViewById(R.id.iv_in);
+        ivOut = findViewById(R.id.iv_out);
+        ivHist = findViewById(R.id.iv_hist);
+        ivSett = findViewById(R.id.iv_sett);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         reference = FirebaseDatabase.getInstance().getReference();
 
-
-        btnMasuk.setOnClickListener(new View.OnClickListener() {
-
+        ivIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), AbsensiMasukActivity.class));
+                Intent intent = new Intent(MainActivity.this, AbsensiMasukActivity.class);
+                startActivity(intent);
             }
         });
 
-        btnKeluar.setOnClickListener(new View.OnClickListener() {
-
+        ivOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), AbsensiKeluarActivity.class));
+                Intent intent = new Intent(MainActivity.this, AbsensiKeluarActivity.class);
+                startActivity(intent);
             }
         });
+
+
 
         Calendar calendar = Calendar.getInstance();
         Date date = calendar.getTime();
@@ -81,8 +86,7 @@ public class MainActivity extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
-        reference = FirebaseDatabase.getInstance().getReference().child("users").child(firebaseUser.getUid());
-
+        reference = FirebaseDatabase.getInstance().getReference("modelUser").child("ModelUser").child(firebaseUser.getUid());
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -99,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
 
 
     }

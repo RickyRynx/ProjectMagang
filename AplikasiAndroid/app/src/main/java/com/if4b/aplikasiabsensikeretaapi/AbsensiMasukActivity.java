@@ -33,6 +33,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -65,9 +67,12 @@ public class AbsensiMasukActivity extends AppCompatActivity {
     Bitmap bitmap;
     private DatabaseReference reference;
     FirebaseDatabase database;
+    FirebaseUser User;
+    FirebaseAuth mAuth;
 
 
     private static final int REQUEST_CODE = 100;
+    private static final int MY_READ_PERMISSION_CODE = 101;
     private static final int CAMERA_REQUEST_CODE = 200;
 
 
@@ -90,7 +95,7 @@ public class AbsensiMasukActivity extends AppCompatActivity {
         btnAbsen = findViewById(R.id.btnAbsen);
         myCalendar = Calendar.getInstance();
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        reference = FirebaseDatabase.getInstance().getReference("ModelAbsensiMasuk");
+        reference = FirebaseDatabase.getInstance().getReference();
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
 
@@ -169,6 +174,8 @@ public class AbsensiMasukActivity extends AppCompatActivity {
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baOs);
         byte[] imageByte = baOs.toByteArray();
         database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("mUser");
+        String postId = ref.push().getKey();
         ModelAbsensiMasuk modelAbsensiMasuk = new ModelAbsensiMasuk();
         StorageReference imageRef = storageReference.child(poto);
         reference = database.getReference("modelAbsensiMasuk");
@@ -176,6 +183,7 @@ public class AbsensiMasukActivity extends AppCompatActivity {
 
 
         HashMap<String, Object> map = new HashMap<>();
+        map.put("postid", postId);
         map.put("nama", nama);
         map.put("jabatan", jabatan);
         map.put("tanggal", tanggal);
@@ -186,7 +194,8 @@ public class AbsensiMasukActivity extends AppCompatActivity {
         map.put("latitude", latitude);
         map.put("longitude" ,longitude);
 
-        reference.setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+
+        reference.child(postId).setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 UploadTask uploadTask = imageRef.putBytes(imageByte);
