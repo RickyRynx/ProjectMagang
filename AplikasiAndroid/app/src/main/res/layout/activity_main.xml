@@ -27,8 +27,8 @@
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginLeft="15dp"
-            android:layout_marginTop="50dp"
-            android:src="@drawable/users"/>
+            android:layout_marginTop="70dp"
+            android:src="@drawable/ic_person"/>
 
         <TextView
             android:id="@+id/tv_welcome"
@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/iv_profil"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="70dp"
             android:text="Selamat Datang"
             android:textSize="16sp"
             android:textStyle="bold"/>
@@ -74,7 +74,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/iv_profil"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="150dp"
             android:layout_centerInParent="true">
 
             <RelativeLayout

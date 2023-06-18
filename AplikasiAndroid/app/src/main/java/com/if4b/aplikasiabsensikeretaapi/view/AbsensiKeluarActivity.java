@@ -1,4 +1,4 @@
-package com.if4b.aplikasiabsensikeretaapi;
+package com.if4b.aplikasiabsensikeretaapi.view;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,9 +19,8 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.if4b.aplikasiabsensikeretaapi.R;
 import com.if4b.aplikasiabsensikeretaapi.model.ModelAbsensiKeluar;
-import com.if4b.aplikasiabsensikeretaapi.model.ModelAbsensiMasuk;
-import com.if4b.aplikasiabsensikeretaapi.view.MainActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

@@ -1,4 +1,4 @@
-package com.if4b.aplikasiabsensikeretaapi;
+package com.if4b.aplikasiabsensikeretaapi.view;
 
 import android.Manifest;
 import android.app.DatePickerDialog;
@@ -40,8 +40,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.if4b.aplikasiabsensikeretaapi.R;
 import com.if4b.aplikasiabsensikeretaapi.model.ModelAbsensiMasuk;
-import com.if4b.aplikasiabsensikeretaapi.view.MainActivity;
 
 
 import java.io.ByteArrayOutputStream;

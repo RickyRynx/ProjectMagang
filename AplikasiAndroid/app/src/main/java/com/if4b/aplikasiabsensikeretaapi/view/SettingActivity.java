@@ -2,6 +2,7 @@ package com.if4b.aplikasiabsensikeretaapi.view;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,84 +17,61 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.if4b.aplikasiabsensikeretaapi.ProfilActivity;
 import com.if4b.aplikasiabsensikeretaapi.R;
 import com.if4b.aplikasiabsensikeretaapi.model.ModelUser;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-
-public class MainActivity extends AppCompatActivity {
-    ImageView ivIn, ivOut, ivHist, ivSett;
-    TextView username, jabatan, tvHari, tvTanggal, tvJam;
+public class SettingActivity extends AppCompatActivity {
+    ImageView ivHistory, ivPrivacy, ivLogout;
+    TextView tvNama;
+    AppCompatButton btnProfile;
     private DatabaseReference reference;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_setting);
+
+        ivHistory = findViewById(R.id.iv_history_setting);
+        ivPrivacy = findViewById(R.id.iv_privacy_terms);
+        ivLogout = findViewById(R.id.iv_logout_setting);
+        btnProfile = findViewById(R.id.btn_edit_profile);
+        tvNama = findViewById(R.id.tv_nama_setting);
 
 
-        username = findViewById(R.id.tv_nama);
-        jabatan = findViewById(R.id.tv_jbt);
-        tvHari = findViewById(R.id.tvHari);
-        tvJam = findViewById(R.id.tvJam);
-        tvTanggal = findViewById(R.id.tvTanggal);
-        ivIn = findViewById(R.id.iv_in);
-        ivOut = findViewById(R.id.iv_out);
-        ivHist = findViewById(R.id.iv_hist);
-        ivSett = findViewById(R.id.iv_sett);
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        reference = FirebaseDatabase.getInstance().getReference();
-
-        ivIn.setOnClickListener(new View.OnClickListener() {
+        ivHistory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, AbsensiMasukActivity.class);
+                Intent intent = new Intent(SettingActivity.this, HistoryActivity.class);
                 startActivity(intent);
             }
         });
 
-        ivOut.setOnClickListener(new View.OnClickListener() {
+        ivPrivacy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, AbsensiKeluarActivity.class);
+                Intent intent = new Intent(SettingActivity.this, PrivacyActivity.class);
                 startActivity(intent);
             }
         });
 
-        ivSett.setOnClickListener(new View.OnClickListener() {
+        ivLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, SettingActivity.class);
+                Intent intent = new Intent(SettingActivity.this, LoginActivity.class);
                 startActivity(intent);
             }
         });
 
-        ivHist.setOnClickListener(new View.OnClickListener() {
+        btnProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, HistoryActivity.class);
+                Intent intent = new Intent(SettingActivity.this, ProfilActivity.class);
                 startActivity(intent);
             }
         });
-
-
-
-        Calendar calendar = Calendar.getInstance();
-        Date date = calendar.getTime();
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy", Locale.getDefault());
-        SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE", Locale.getDefault());
-        SimpleDateFormat clockFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
-
-        tvHari.setText(dayFormat.format(date));
-        tvTanggal.setText(dateFormat.format(date));
-        tvJam.setText(clockFormat.format(date));
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
@@ -103,8 +81,7 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     ModelUser modelUser = snapshot.getValue(ModelUser.class);
-                    username.setText(modelUser.getUsername());
-                    jabatan.setText(modelUser.getJabatan());
+                    tvNama.setText(modelUser.getUsername());
                 }
 
             }
@@ -114,14 +91,5 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-
-
     }
-
-
 }
-
-
-
-

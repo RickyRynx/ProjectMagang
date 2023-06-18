@@ -1,14 +1,16 @@
-package com.if4b.aplikasiabsensikeretaapi;
+package com.if4b.aplikasiabsensikeretaapi.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-public class HistoryActivity extends AppCompatActivity {
+import com.if4b.aplikasiabsensikeretaapi.R;
+
+public class PrivacyActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_history);
+        setContentView(R.layout.activity_privacy);
     }
 }
