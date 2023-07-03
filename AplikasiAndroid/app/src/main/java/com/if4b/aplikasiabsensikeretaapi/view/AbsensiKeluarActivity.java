@@ -48,9 +48,18 @@ public class AbsensiKeluarActivity extends AppCompatActivity {
         etTanggal = findViewById(R.id.etTgl);
         btnAbsenOut = findViewById(R.id.btnAbsenKeluar);
         myCalendar = Calendar.getInstance();
+        Calendar currentTime = Calendar.getInstance();
+        int hour = currentTime.get(Calendar.HOUR_OF_DAY);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         reference = FirebaseDatabase.getInstance().getReference();
 
+
+        int jamAbsen = 17;
+        if (hour >= jamAbsen) {
+            btnAbsenOut.setEnabled(false);
+        } else {
+            btnAbsenOut.setEnabled(true);
+        }
 
         btnAbsenOut.setOnClickListener(new View.OnClickListener() {
             @Override

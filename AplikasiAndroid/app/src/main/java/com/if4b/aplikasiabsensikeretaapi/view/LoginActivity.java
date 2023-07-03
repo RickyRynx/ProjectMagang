@@ -18,12 +18,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.auth.User;
-import com.if4b.aplikasiabsensikeretaapi.DBApp;
+import com.if4b.aplikasiabsensikeretaapi.model.ModelKaryawan;
+import com.if4b.aplikasiabsensikeretaapi.model.ModelManager;
 import com.if4b.aplikasiabsensikeretaapi.R;
-import com.if4b.aplikasiabsensikeretaapi.model.ModelUser;
+import com.if4b.aplikasiabsensikeretaapi.viewManager.DashManagerActivity;
+import com.if4b.aplikasiabsensikeretaapi.viewKaryawan.DashKaryawanActivity;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -33,6 +35,7 @@ public class LoginActivity extends AppCompatActivity {
     ProgressDialog progressDialog;
     FirebaseAuth mAuth;
     FirebaseUser mUser;
+    FirebaseDatabase mDatabase;
 
 
     @Override
@@ -54,7 +57,8 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
-                loginAuth();
+                loginAuthKaryawan();
+                loginAuthManager();
             }
         });
 
@@ -69,12 +73,16 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+
     }
 
-    private void loginAuth() {
+
+
+    private void loginAuthKaryawan() {
         String email = etEmail.getText().toString();
         String password = etPassword.getText().toString();
-        ModelUser modelUser = new ModelUser();
+
+
 
         if (email.isEmpty()) {
             etPassword.setError("Password tidak boleh kosong");
@@ -82,31 +90,103 @@ public class LoginActivity extends AppCompatActivity {
         } else if (password.isEmpty() || password.length()<6) {
             etPassword.setError("Password Minimum 6 Karakter");
             etPassword.requestFocus();
-        } else {
-            progressDialog.setMessage("Login...");
-            progressDialog.setCanceledOnTouchOutside(false);
-            progressDialog.show();
-            
+        }  else {
+
             mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
-                        progressDialog.dismiss();
-                        loginUser();
-                        Toast.makeText(LoginActivity.this, "Login Berhasil", Toast.LENGTH_SHORT).show();
-                    } else {
-                        progressDialog.dismiss();
-                        Toast.makeText(LoginActivity.this, "Login Gagal", Toast.LENGTH_SHORT).show();
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        if (user != null) {
+
+                            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("TabelKaryawan");
+                            reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    ModelKaryawan modelKaryawan = snapshot.getValue(ModelKaryawan.class);
+                                    if (modelKaryawan != null) {
+                                        modelKaryawan.getJabatan();
+                                        loginKaryawan();
+                                        Toast.makeText(LoginActivity.this, "Login Berhasil", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                    Toast.makeText(LoginActivity.this, "Login Gagal!!", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
+                        }
                     }
+
                 }
             });
+
+        }
+
+    }
+
+    private void loginAuthManager() {
+        String email = etEmail.getText().toString();
+        String password = etPassword.getText().toString();
+
+
+
+        if (email.isEmpty()) {
+            etPassword.setError("Password tidak boleh kosong");
+            etPassword.requestFocus();
+        } else if (password.isEmpty() || password.length()<6) {
+            etPassword.setError("Password Minimum 6 Karakter");
+            etPassword.requestFocus();
+        }  else {
+
+            mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful()) {
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        if (user != null) {
+
+                            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("TabelManager");
+                            reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    ModelManager modelManager = snapshot.getValue(ModelManager.class);
+                                    if (modelManager != null) {
+                                        modelManager.getJabatan();
+                                        loginManager();
+                                        Toast.makeText(LoginActivity.this, "Login Berhasil", Toast.LENGTH_SHORT).show();
+                                    }
+
+                                }
+
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                    Toast.makeText(LoginActivity.this, "Login Gagal!!", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
+                        }
+                    }
+
+                }
+            });
+
         }
     }
 
-    private void loginUser() {
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+
+    private void loginKaryawan() {
+        Intent intent = new Intent(LoginActivity.this, DashKaryawanActivity.class);
         startActivity(intent);
+        finish();
+    }
+
+    private void loginManager() {
+        Intent intent = new Intent(LoginActivity.this, DashManagerActivity.class);
+        startActivity(intent);
+        finish();
     }
 
 }

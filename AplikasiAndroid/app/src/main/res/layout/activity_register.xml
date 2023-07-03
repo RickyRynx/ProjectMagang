@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".view.RegisterActivity">
+
 
     <LinearLayout
         android:id="@+id/ll_register"
@@ -14,12 +15,14 @@
         android:padding="16dp">
 
         <ImageView
+            android:id="@+id/iv_poto_register"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_gravity="center"
             android:src="@drawable/logo_kai"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="15dp"/>
+            android:layout_marginTop="20dp"/>
+
+
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_username"
@@ -37,77 +40,65 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_email"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="7dp">
 
             <EditText
                 android:id="@+id/et_email_register"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Email"
-                android:inputType="text"/>
+                android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_passwordreg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
+            android:layout_marginTop="10dp">
 
             <EditText
                 android:id="@+id/et_passwordreg"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Password"
-                android:inputType="textPassword"/>
+                android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_konfirmasi_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
+            android:layout_marginTop="7dp">
 
             <EditText
                 android:id="@+id/et_konfirmasi_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Konfirmasi Password"
-                android:inputType="textPassword"/>
+                android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_alamat"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
+            android:layout_marginTop="7dp">
 
             <EditText
                 android:id="@+id/et_alamat"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Alamat"
-                android:inputType="text"/>
+                android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_jabatan"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
-
-            <EditText
-                android:id="@+id/et_jabatan"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Jabatan"
-                android:inputType="text"/>
-        </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_nomor_hp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
+            android:layout_marginTop="7dp">
 
             <EditText
                 android:id="@+id/et_nomor_hp"
@@ -117,11 +108,29 @@
                 android:inputType="text"/>
         </com.google.android.material.textfield.TextInputLayout>
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_select"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="7dp"
+            android:hint="@string/select"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+
+            <AutoCompleteTextView
+                android:id="@+id/auto_select_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+
+
         <Button
             android:id="@+id/btn_register"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="15dp"
             android:text="Register"/>
 
         <Button
@@ -134,7 +143,8 @@
             android:textAllCaps="false"
             android:textColor="#0000FF"
             android:textSize="14sp"/>
-    </LinearLayout>
+
+
 
     <ProgressBar
         android:id="@+id/progressbar"
@@ -143,5 +153,6 @@
         android:layout_below="@id/ll_register"
         android:layout_centerHorizontal="true"
         android:visibility="gone"/>
+    </LinearLayout>
 
-</RelativeLayout>
+</ScrollView>

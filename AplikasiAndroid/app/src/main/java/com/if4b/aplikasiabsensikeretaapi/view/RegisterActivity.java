@@ -7,6 +7,9 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -20,6 +23,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.if4b.aplikasiabsensikeretaapi.model.ModelKaryawan;
+import com.if4b.aplikasiabsensikeretaapi.model.ModelManager;
 import com.if4b.aplikasiabsensikeretaapi.R;
 import com.if4b.aplikasiabsensikeretaapi.model.ModelUser;
 
@@ -29,8 +34,12 @@ public class RegisterActivity extends AppCompatActivity {
     private Button btnLogin;
     private DatabaseReference reference;
     FirebaseDatabase database;
+    String[] jabatan = {"Karyawan", "Staff", "Manager"};
+    AutoCompleteTextView autoText;
+    ArrayAdapter<String> adapterItems;
 
-    private EditText etUsername, etPassword, etKonfirmasiPassword, etAlamat, etJabatan, etNoHp, etEmail;
+
+    private EditText etUsername, etPassword, etKonfirmasiPassword, etAlamat, etNoHp, etEmail;
     private Button btnReg;
     ProgressDialog progressDialog;
     FirebaseAuth mAuth;
@@ -47,12 +56,15 @@ public class RegisterActivity extends AppCompatActivity {
         etPassword = findViewById(R.id.et_passwordreg);
         etKonfirmasiPassword = findViewById(R.id.et_konfirmasi_password);
         etAlamat = findViewById(R.id.et_alamat);
-        etJabatan = findViewById(R.id.et_jabatan);
         etNoHp = findViewById(R.id.et_nomor_hp);
         btnReg = findViewById(R.id.btn_register);
         progressDialog = new ProgressDialog(this);
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
+        autoText = findViewById(R.id.auto_select_item);
+        adapterItems = new ArrayAdapter<String>(this, R.layout.list_select_dropdown, jabatan);
+        autoText.setAdapter(adapterItems);
+
 
 
         btnLogin = findViewById(R.id.btn_login);
@@ -61,6 +73,14 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        autoText.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String item = parent.getItemAtPosition(position).toString();
+                Toast.makeText(getApplicationContext(), "Masuk Sebagai: "+item, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -74,8 +94,9 @@ public class RegisterActivity extends AppCompatActivity {
                 String password = etPassword.getText().toString().trim();
                 String konfirmasiPassword = etKonfirmasiPassword.getText().toString().trim();
                 String alamat = etAlamat.getText().toString().trim();
-                String jabatan = etJabatan.getText().toString().trim();
+                String jabatan = autoText.getText().toString().trim();
                 String noHp = etNoHp.getText().toString().trim();
+
 
 
                 if (username.isEmpty()) {
@@ -93,10 +114,7 @@ public class RegisterActivity extends AppCompatActivity {
                 } else if (alamat.isEmpty()) {
                     etAlamat.setError("Alamat tidak boleh kosong");
                     etAlamat.requestFocus();
-                } else if (jabatan.isEmpty()) {
-                    etJabatan.setError("Jabatan tidak boleh kosong");
-                    etJabatan.requestFocus();
-                } else if (noHp.isEmpty()) {
+                }  else if (noHp.isEmpty()) {
                     etNoHp.setError("Nomor HP tidak boleh kosong");
                     etNoHp.requestFocus();
                 } else {
@@ -111,7 +129,9 @@ public class RegisterActivity extends AppCompatActivity {
         progressDialog.show();
         database = FirebaseDatabase.getInstance();
         ModelUser modelUser = new ModelUser();
-        reference = database.getReference("modelUser");
+        ModelKaryawan modelKaryawan = new ModelKaryawan();
+        ModelManager modelManager = new ModelManager();
+        reference = database.getReference();
 
         mAuth.createUserWithEmailAndPassword(email, password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
             @Override
@@ -126,28 +146,49 @@ public class RegisterActivity extends AppCompatActivity {
                 map.put("jabatan", jabatan);
                 map.put("no_hp", noHp);
 
-                reference.child("ModelUser").child(mAuth.getCurrentUser().getUid()).setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            progressDialog.dismiss();
-                            Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            startActivity(intent);
-                            finish();
+                if (jabatan.equals("Manager")) {
+                    reference.child("TabelManager").child(mAuth.getCurrentUser().getUid()).setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                progressDialog.dismiss();
+                                Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
+                                finish();
+                            }
                         }
-                    }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            progressDialog.dismiss();
+                            Toast.makeText(RegisterActivity.this, "Register Gagal!!", Toast.LENGTH_SHORT).show();
+                        }
+                    });
 
-                });
+                } else if (jabatan.equals("Karyawan")) {
+                    reference.child("TabelKaryawan").child(mAuth.getCurrentUser().getUid()).setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                progressDialog.dismiss();
+                                Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
+                                finish();
+                            }
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            progressDialog.dismiss();
+                            Toast.makeText(RegisterActivity.this, "Register Gagal!!", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
             }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                progressDialog.dismiss();
-                Toast.makeText(RegisterActivity.this, "Register Gagal!!", Toast.LENGTH_SHORT).show();
-            }
+
         });
-
-
     }
+
 }

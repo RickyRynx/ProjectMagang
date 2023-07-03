@@ -2,4 +2,6 @@
     <string name="app_name">Aplikasi Absensi Kereta Api</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="select">Jabatan</string>
 </resources>

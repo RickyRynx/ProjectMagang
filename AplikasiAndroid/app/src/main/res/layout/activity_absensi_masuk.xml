@@ -1,123 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".view.AbsensiMasukActivity">
 
-    <EditText
-        android:id="@+id/et_nama"
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:hint="Nama"/>
-
-    <EditText
-        android:id="@+id/et_jabatan"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:hint="Jabatan"
-        android:layout_below="@id/et_nama"/>
+        android:layout_marginTop="50dp"
+        android:text="Absensi Masuk"
+        android:gravity="center"
+        android:textSize="30sp"
+        android:textColor="#FF0000"
+        android:textStyle="bold"/>
 
     <EditText
         android:id="@+id/et_tanggal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Tanggal"
-        android:layout_below="@id/et_jabatan"/>
+        android:layout_marginTop="20dp"/>
 
     <ImageView
         android:id="@+id/iv_absen"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
         android:src="@mipmap/ic_launcher"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="20dp"
-        android:layout_below="@id/et_tanggal"/>
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp" />
 
     <Button
         android:id="@+id/btnCapture"
-        android:layout_below="@+id/iv_absen"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Open Camera"
         />
     
-    <TextView
-        android:id="@+id/tv_alamat"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_maps"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Alamat"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:layout_below="@+id/btnCapture"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:textColor="#00FF00"/>
+        android:layout_margin="16dp"
+        android:elevation="4dp">
 
-    <TextView
-        android:id="@+id/tv_kota"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Kota"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:layout_below="@+id/tv_alamat"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:textColor="#00FF00"/>
-
-    <TextView
-        android:id="@+id/tv_negara"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Negara"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:layout_below="@+id/tv_kota"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:textColor="#00FF00"/>
-
-    <TextView
-        android:id="@+id/tv_latitude"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Latitude"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:layout_below="@+id/tv_negara"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:textColor="#00FF00"/>
-
-    <TextView
-        android:id="@+id/tv_longitude"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Longitude"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:layout_below="@+id/tv_latitude"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:textColor="#00FF00"/>
-
-    <Button
-        android:id="@+id/btnUpload"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_longitude"
-        android:text="Get Location"/>
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/map_view_in"
+            android:layout_width="match_parent"
+            android:layout_height="200dp" />
+    </androidx.cardview.widget.CardView>
 
     <Button
         android:id="@+id/btnAbsen"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/btnUpload"
-        android:text="Silahkan Absen Masuk"/>
+        android:text="Silahkan Absen Masuk" />
 
-</RelativeLayout>
+</LinearLayout>

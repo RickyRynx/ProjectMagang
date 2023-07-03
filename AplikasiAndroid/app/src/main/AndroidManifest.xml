@@ -19,6 +19,26 @@
         android:theme="@style/Theme.Material3.Light.NoActionBar"
         tools:targetApi="31">
         <activity
+            android:name=".viewManager.SettingManagerActivity"
+            android:exported="false" />
+
+        <meta-data
+            android:name="com.google.mlkit.vision.DEPENDENCIES"
+            android:value="face" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${MAPS_API_KEY}" />
+
+        <activity
+            android:name=".viewKaryawan.DashKaryawanActivity"
+            android:exported="false"
+            android:launchMode="singleTask"/>
+        <activity
+            android:name=".viewManager.DashManagerActivity"
+            android:exported="false"
+            android:launchMode="singleTask"/>
+        <activity
             android:name=".view.PrivacyActivity"
             android:exported="false" />
         <activity
@@ -51,7 +71,8 @@
             android:exported="true" />
         <activity
             android:name=".view.RegisterActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".view.MainActivity"
             android:exported="true">
