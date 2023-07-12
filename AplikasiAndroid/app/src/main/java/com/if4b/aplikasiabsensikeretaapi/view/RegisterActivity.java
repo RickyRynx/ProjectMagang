@@ -26,6 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.if4b.aplikasiabsensikeretaapi.model.ModelKaryawan;
 import com.if4b.aplikasiabsensikeretaapi.model.ModelManager;
 import com.if4b.aplikasiabsensikeretaapi.R;
+import com.if4b.aplikasiabsensikeretaapi.model.ModelProfil;
 import com.if4b.aplikasiabsensikeretaapi.model.ModelUser;
 
 import java.util.HashMap;
@@ -34,7 +35,7 @@ public class RegisterActivity extends AppCompatActivity {
     private Button btnLogin;
     private DatabaseReference reference;
     FirebaseDatabase database;
-    String[] jabatan = {"Karyawan", "Staff", "Manager"};
+    String[] jabatan = {"Karyawan", "Manager"};
     AutoCompleteTextView autoText;
     ArrayAdapter<String> adapterItems;
 
@@ -131,6 +132,8 @@ public class RegisterActivity extends AppCompatActivity {
         ModelUser modelUser = new ModelUser();
         ModelKaryawan modelKaryawan = new ModelKaryawan();
         ModelManager modelManager = new ModelManager();
+        ModelProfil modelProfil = new ModelProfil();
+        modelKaryawan.setNomor_hp(noHp);
         reference = database.getReference();
 
         mAuth.createUserWithEmailAndPassword(email, password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
@@ -153,6 +156,7 @@ public class RegisterActivity extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 progressDialog.dismiss();
                                 Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                                Toast.makeText(RegisterActivity.this, "Register Berhasil!!", Toast.LENGTH_SHORT).show();
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 startActivity(intent);
                                 finish();

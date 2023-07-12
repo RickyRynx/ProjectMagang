@@ -1,18 +1,18 @@
 package com.if4b.aplikasiabsensikeretaapi.view;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
@@ -20,27 +20,23 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationAvailability;
-import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
@@ -58,17 +54,15 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.google.maps.android.SphericalUtil;
+import com.if4b.aplikasiabsensikeretaapi.FaceIdActivity;
 import com.if4b.aplikasiabsensikeretaapi.R;
 import com.if4b.aplikasiabsensikeretaapi.model.ModelAbsensiMasuk;
-import com.if4b.aplikasiabsensikeretaapi.viewKaryawan.DashKaryawanActivity;
 
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 
 
@@ -121,7 +115,8 @@ public class AbsensiMasukActivity extends AppCompatActivity implements OnMapRead
         mapView.getMapAsync(this);
 
 
-        int jamAbsen = 16;
+
+        int jamAbsen = 20;
         if (hour >= jamAbsen) {
             btnAbsen.setEnabled(false);
         } else {
@@ -151,8 +146,42 @@ public class AbsensiMasukActivity extends AppCompatActivity implements OnMapRead
                     absenIn(tanggal, poto);
                 }
 
-            }
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(AbsensiMasukActivity.this, "notification");
+                builder.setContentTitle("Absen Masuk");
+                builder.setContentText("Absen Masuk Berhasil!!.");
+                builder.setSmallIcon(R.drawable.ic_notification);
+                builder.setAutoCancel(true);
 
+                NotificationManagerCompat managerCompat = NotificationManagerCompat.from(AbsensiMasukActivity.this);
+                if (ActivityCompat.checkSelfPermission(AbsensiMasukActivity.this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
+                }
+                managerCompat.notify(0, builder.build());
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    NotificationChannel channel = new NotificationChannel("notification", "notification", NotificationManager.IMPORTANCE_DEFAULT);
+                    NotificationManager manager = getSystemService(NotificationManager.class);
+                    manager.createNotificationChannel(channel);
+
+                    channel.enableLights(true);
+                    channel.setLightColor(Color.RED);
+                    channel.enableVibration(true);
+                    channel.setVibrationPattern(new long[]{100, 200, 300, 400, 500});
+
+                    // Terapkan channel pada NotificationManager
+                    NotificationManager notificationManager = getSystemService(NotificationManager.class);
+                    notificationManager.createNotificationChannel(channel);
+                }
+
+                //checkDistance();
+            }
         });
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
@@ -178,6 +207,34 @@ public class AbsensiMasukActivity extends AppCompatActivity implements OnMapRead
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     REQUEST_CODE);
+        }
+
+    }
+
+
+
+    private void checkDistance() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            fusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(Location location) {
+
+                    if (location != null) {
+                        float[] results = new float[1];
+                        Location.distanceBetween(location.getLatitude(), location.getLongitude(), circleCenter.latitude, circleCenter.longitude, results);
+
+                        float distance = results[0];
+                        if (distance == circleRadius) {
+                            // Jarak kurang dari atau sama dengan radius, aksi yang diinginkan
+                            Toast.makeText(AbsensiMasukActivity.this, "Anda berada dalam radius", Toast.LENGTH_SHORT).show();
+
+                        } else if (distance >= circleRadius) {
+                            // Jarak melebihi radius, aksi yang diinginkan
+                            Toast.makeText(AbsensiMasukActivity.this, "Anda berada di luar radius", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+            });
         }
     }
 
@@ -213,18 +270,19 @@ public class AbsensiMasukActivity extends AppCompatActivity implements OnMapRead
                             @Override
                             public void onSuccess(Uri uri) {
                                 String downloadUrl = uri.toString();
+
+                                if (task.isSuccessful()) {
+                                    Intent intent = new Intent(AbsensiMasukActivity.this, FaceIdActivity.class);
+                                    Toast.makeText(AbsensiMasukActivity.this, "Absensi Masuk Berhasil!!", Toast.LENGTH_SHORT).show();
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    startActivity(intent);
+                                    finish();
+                                }
                             }
                         });
                     }
                 });
 
-                if (task.isSuccessful()) {
-                    Intent intent = new Intent(AbsensiMasukActivity.this, DashKaryawanActivity.class);
-                    Toast.makeText(AbsensiMasukActivity.this, "Absensi Berhasil!!", Toast.LENGTH_SHORT).show();
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                    finish();
-                }
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -299,87 +357,21 @@ public class AbsensiMasukActivity extends AppCompatActivity implements OnMapRead
     public void onMapReady(@NonNull GoogleMap googleMap) {
         myMap = googleMap;
 
-        LatLng location = new LatLng(-2.9952018760828563, 104.77711597303835);
+        LatLng location = new LatLng(-3.013338445881627, 104.8107183365927);
         myMap.addMarker(new MarkerOptions()
                 .position(location)
                 .title("Marker in Location"));
         myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, DEFAULT_ZOOM));
 
         circleCenter = location;
+        circleRadius = 200;
         circle = googleMap.addCircle(new CircleOptions()
                 .center(circleCenter)
                 .radius(circleRadius)
                 .strokeColor(Color.RED)
                 .fillColor(Color.argb(50, 255, 0, 0)));
 
-        LatLngBounds bounds = toBounds(circleCenter, circleRadius);
-        googleMap.setLatLngBoundsForCameraTarget(bounds);
+
     }
-
-    private LatLngBounds toBounds(LatLng center, double radius) {
-        double distanceFromCenterToCorner = radius * Math.sqrt(2);
-        LatLng southwest = SphericalUtil.computeOffset(center, distanceFromCenterToCorner, 225);
-        LatLng northeast = SphericalUtil.computeOffset(center, distanceFromCenterToCorner, 45);
-        return new LatLngBounds(southwest, northeast);
-    }
-
-    @SuppressLint("MissingPermission")
-    private void startLocationUpdates() {
-        locationRequest = LocationRequest.create();
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setInterval(5000);
-
-        if (ContextCompat.checkSelfPermission(AbsensiMasukActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null);
-        } else {
-            ActivityCompat.requestPermissions(AbsensiMasukActivity.this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    MY_READ_PERMISSION_CODE);
-        }
-    }
-
-
-    private void stopLocationUpdates() {
-        fusedLocationProviderClient.removeLocationUpdates(locationCallback);
-    }
-
-
-    private LocationCallback locationCallback = new LocationCallback() {
-        @Override
-        public void onLocationResult(@NonNull LocationResult locationResult) {
-            if (locationResult == null) {
-                return;
-            }
-
-            for (Location location : locationResult.getLocations()) {
-                if (location != null) {
-                    checkLocationInRadius(location);
-                }
-            }
-        }
-    };
-
-    public void checkLocationInRadius(Location location) {
-        float distance = calculateDistance(location.getLatitude(), location.getLongitude(),
-                circleCenter.latitude, circleCenter.longitude);
-
-        if (distance < circleRadius) {
-            Toast.makeText(AbsensiMasukActivity.this, "Anda Berada Di Luar Radius Absensi!", Toast.LENGTH_SHORT).show();
-            // Nonaktifkan tombol absen atau lakukan tindakan sesuai kebutuhan
-        } else {
-            String tes = String.valueOf(location.getLongitude());
-            Toast.makeText(AbsensiMasukActivity.this, "Anda Berada Di Dalam Radius Absensi", Toast.LENGTH_SHORT).show();
-            // Aktifkan tombol absen atau lakukan tindakan sesuai kebutuhan
-
-        }
-    }
-
-    private float calculateDistance(double lat1, double lon1, double lat2, double lon2) {
-        float[] results = new float[1];
-        Location.distanceBetween(lat1, lon1, lat2, lon2, results);
-        return results[0];
-    }
-
 
 }

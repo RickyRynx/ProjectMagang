@@ -2,22 +2,21 @@ package com.if4b.aplikasiabsensikeretaapi.model;
 
 public class ModelKaryawan {
 
-        String username, email, password, konfirmasi, alamat, jabatan, nomor, postId, idUser;
+        String username, email, password, konfirmasi, alamat, jabatan, nomor_hp, postId;
 
         public ModelKaryawan() {
         }
 
 
-        public ModelKaryawan(String postId, String idUser,String username, String email, String password, String konfirmasi, String alamat, String jabatan, String nomor) {
+        public ModelKaryawan(String postId, String idUser,String username, String email, String password, String konfirmasi, String alamat, String jabatan, String nomor_hp) {
             this.username = username;
             this.email = email;
             this.password = password;
             this.konfirmasi = konfirmasi;
             this.alamat = alamat;
             this.jabatan = jabatan;
-            this.nomor = nomor;
+            this.nomor_hp = nomor_hp;
             this.postId = postId;
-            this.idUser = idUser;
         }
 
         public String getPostId() {
@@ -28,13 +27,6 @@ public class ModelKaryawan {
             this.postId = postId;
         }
 
-        public String getIdUser() {
-            return idUser;
-        }
-
-        public void setIdUser(String idUser) {
-            this.idUser = idUser;
-        }
 
         public String getUsername() {
             return username;
@@ -84,12 +76,12 @@ public class ModelKaryawan {
             this.jabatan = jabatan;
         }
 
-        public String getNomor() {
-            return nomor;
+        public String getNomor_hp() {
+            return nomor_hp;
         }
 
-        public void setNomor(String nomor) {
-            this.nomor = nomor;
+        public void setNomor_hp(String nomor) {
+            this.nomor_hp = nomor;
         }
     }
 

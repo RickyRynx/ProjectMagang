@@ -16,7 +16,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.if4b.aplikasiabsensikeretaapi.CutiActivity;
 import com.if4b.aplikasiabsensikeretaapi.R;
+import com.if4b.aplikasiabsensikeretaapi.RekapActivity;
 import com.if4b.aplikasiabsensikeretaapi.model.ModelKaryawan;
 import com.if4b.aplikasiabsensikeretaapi.model.ModelUser;
 import com.if4b.aplikasiabsensikeretaapi.view.AbsensiKeluarActivity;
@@ -30,7 +32,7 @@ import java.util.Date;
 import java.util.Locale;
 
 public class DashKaryawanActivity extends AppCompatActivity {
-    ImageView ivIn, ivOut, ivHist, ivSett;
+    ImageView ivIn, ivOut, ivHist, ivSett, ivCuti, ivRekapan;
     TextView username, jabatan, tvHari, tvTanggal, tvJam;
     private DatabaseReference reference;
     private FirebaseAuth firebaseAuth;
@@ -50,6 +52,8 @@ public class DashKaryawanActivity extends AppCompatActivity {
         ivOut = findViewById(R.id.iv_out_user);
         ivHist = findViewById(R.id.iv_hist_user);
         ivSett = findViewById(R.id.iv_sett_user);
+        ivCuti = findViewById(R.id.iv_cuti_user);
+        ivRekapan = findViewById(R.id.iv_rekap_user);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         reference = FirebaseDatabase.getInstance().getReference();
 
@@ -81,6 +85,22 @@ public class DashKaryawanActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(DashKaryawanActivity.this, HistoryActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        ivCuti.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(DashKaryawanActivity.this, CutiActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        ivRekapan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(DashKaryawanActivity.this, RekapActivity.class);
                 startActivity(intent);
             }
         });

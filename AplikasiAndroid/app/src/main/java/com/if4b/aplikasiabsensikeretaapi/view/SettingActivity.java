@@ -19,6 +19,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.if4b.aplikasiabsensikeretaapi.ProfilActivity;
 import com.if4b.aplikasiabsensikeretaapi.R;
+import com.if4b.aplikasiabsensikeretaapi.model.ModelKaryawan;
 import com.if4b.aplikasiabsensikeretaapi.model.ModelUser;
 
 public class SettingActivity extends AppCompatActivity {
@@ -80,8 +81,8 @@ public class SettingActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    ModelUser modelUser = snapshot.getValue(ModelUser.class);
-                    tvNama.setText(modelUser.getUsername());
+                    ModelKaryawan modelKaryawan = snapshot.getValue(ModelKaryawan.class);
+                    tvNama.setText(modelKaryawan.getUsername());
                 }
 
             }

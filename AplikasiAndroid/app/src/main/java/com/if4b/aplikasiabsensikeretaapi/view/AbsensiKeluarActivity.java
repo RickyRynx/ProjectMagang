@@ -2,9 +2,17 @@ package com.if4b.aplikasiabsensikeretaapi.view;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import android.app.DatePickerDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -21,6 +29,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.if4b.aplikasiabsensikeretaapi.R;
 import com.if4b.aplikasiabsensikeretaapi.model.ModelAbsensiKeluar;
+import com.if4b.aplikasiabsensikeretaapi.viewKaryawan.DashKaryawanActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -61,6 +70,21 @@ public class AbsensiKeluarActivity extends AppCompatActivity {
             btnAbsenOut.setEnabled(true);
         }
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel("notification", "notification", NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+
+            channel.enableLights(true);
+            channel.setLightColor(Color.RED);
+            channel.enableVibration(true);
+            channel.setVibrationPattern(new long[]{100, 200, 300, 400, 500});
+
+            // Terapkan channel pada NotificationManager
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+
         btnAbsenOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -80,6 +104,25 @@ public class AbsensiKeluarActivity extends AppCompatActivity {
                 } else {
                     absenOut(nama, jabatan, tanggal);
                 }
+
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(AbsensiKeluarActivity.this, "notification");
+                builder.setContentTitle("Absen Keluar");
+                builder.setContentText("Absen Keluar Berhasil!!.");
+                builder.setSmallIcon(R.drawable.ic_notification);
+                builder.setAutoCancel(true);
+
+                NotificationManagerCompat managerCompat = NotificationManagerCompat.from(AbsensiKeluarActivity.this);
+                if (ActivityCompat.checkSelfPermission(AbsensiKeluarActivity.this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
+                }
+                managerCompat.notify(1, builder.build());
             }
         });
 
@@ -104,7 +147,7 @@ public class AbsensiKeluarActivity extends AppCompatActivity {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("mUser");
         String postId = ref.push().getKey();
         ModelAbsensiKeluar modelAbsensiKeluar = new ModelAbsensiKeluar();
-        reference = database.getReference("modelAbsensiKeluar");
+        reference = database.getReference("TabelAbsensiKeluar");
         reference.push().setValue(modelAbsensiKeluar);
 
         HashMap<String, Object> map = new HashMap<>();
@@ -117,8 +160,8 @@ public class AbsensiKeluarActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    Intent intent = new Intent(AbsensiKeluarActivity.this, MainActivity.class);
-                    Toast.makeText(AbsensiKeluarActivity.this, "Absensi Berhasil!!", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(AbsensiKeluarActivity.this, DashKaryawanActivity.class);
+                    Toast.makeText(AbsensiKeluarActivity.this, "Absensi Keluar Berhasil!!", Toast.LENGTH_SHORT).show();
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                     finish();

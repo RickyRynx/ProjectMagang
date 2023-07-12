@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -14,10 +15,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.if4b.aplikasiabsensikeretaapi.R;
+import com.if4b.aplikasiabsensikeretaapi.model.ModelKaryawan;
+import com.if4b.aplikasiabsensikeretaapi.model.ModelProfil;
 import com.if4b.aplikasiabsensikeretaapi.model.ModelUser;
 
 public class ProfilActivity extends AppCompatActivity {
-    TextView tvNama, tvEmail, tvJabatan, tvAlamat, tvNo;
+    TextView tvNama;
+    TextView tvEmail;
+    TextView tvJabatan;
+    TextView tvAlamat;
+    TextView tvNo;
     private DatabaseReference reference;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
@@ -33,19 +40,20 @@ public class ProfilActivity extends AppCompatActivity {
         tvAlamat = findViewById(R.id.tvProfilAlamat);
         tvNo = findViewById(R.id.tvProfilNo);
 
+
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
-        reference = FirebaseDatabase.getInstance().getReference("modelUser").child("ModelUser").child(firebaseUser.getUid());
+        reference = FirebaseDatabase.getInstance().getReference("TabelKaryawan").child(firebaseUser.getUid());
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    ModelUser modelUser = snapshot.getValue(ModelUser.class);
-                    tvNama.setText(modelUser.getUsername());
-                    tvEmail.setText(modelUser.getEmail());
-                    tvJabatan.setText(modelUser.getJabatan());
-                    tvAlamat.setText(modelUser.getAlamat());
-                    tvNo.setText(modelUser.getNomor());
+                    ModelProfil modelProfil = snapshot.getValue(ModelProfil.class);
+                    tvNama.setText("Nama: " + modelProfil.getUsername());
+                    tvEmail.setText("Email: " + modelProfil.getEmail());
+                    tvJabatan.setText("Jabatan: " + modelProfil.getJabatan());
+                    tvAlamat.setText("Alamat: " + modelProfil.getAlamat());
+                    tvNo.setText("No HP: " + modelProfil.getNoHp());
                 }
 
             }

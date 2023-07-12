@@ -1,41 +1,34 @@
 {
   "project_info": {
-    "project_number": "844630947680",
-    "project_id": "aplikasi-absensi-kereta-api",
-    "storage_bucket": "aplikasi-absensi-kereta-api.appspot.com"
+    "project_number": "645079347491",
+    "firebase_url": "https://aplikasi-magang-e6647-default-rtdb.firebaseio.com",
+    "project_id": "aplikasi-magang-e6647",
+    "storage_bucket": "aplikasi-magang-e6647.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:844630947680:android:f892009a1c7c480b8e9005",
+        "mobilesdk_app_id": "1:645079347491:android:1b16a848c74a2738dadc96",
         "android_client_info": {
           "package_name": "com.if4b.aplikasiabsensikeretaapi"
         }
       },
       "oauth_client": [
         {
-          "client_id": "844630947680-3v26tjmemrgeipsu9esl774rlpiooude.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.if4b.aplikasiabsensikeretaapi",
-            "certificate_hash": "2f315bf600ba53309d9180af8a5cba64d8232c3c"
-          }
-        },
-        {
-          "client_id": "844630947680-l2ijg0ap3msd9jifosnsnamlm61cg1h8.apps.googleusercontent.com",
+          "client_id": "645079347491-e94r37rc7k2r9pre6r1lsrrbncipv7ue.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCZ_UBR-8lZeOjTQ5j6xe5fuJioagcItFk"
+          "current_key": "AIzaSyBlTYJOmyp7Qps5tlbtT0QwV8-RyKARonQ"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "844630947680-l2ijg0ap3msd9jifosnsnamlm61cg1h8.apps.googleusercontent.com",
+              "client_id": "645079347491-e94r37rc7k2r9pre6r1lsrrbncipv7ue.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
