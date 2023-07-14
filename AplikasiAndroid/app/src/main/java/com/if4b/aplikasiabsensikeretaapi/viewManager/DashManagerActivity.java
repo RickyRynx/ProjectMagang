@@ -18,9 +18,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.if4b.aplikasiabsensikeretaapi.model.ModelManager;
 import com.if4b.aplikasiabsensikeretaapi.R;
-import com.if4b.aplikasiabsensikeretaapi.view.AbsensiKeluarActivity;
-import com.if4b.aplikasiabsensikeretaapi.view.AbsensiMasukActivity;
-import com.if4b.aplikasiabsensikeretaapi.view.HistoryActivity;
+import com.if4b.aplikasiabsensikeretaapi.viewKaryawan.AbsensiKeluarActivity;
+import com.if4b.aplikasiabsensikeretaapi.viewKaryawan.AbsensiMasukActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -28,7 +27,7 @@ import java.util.Date;
 import java.util.Locale;
 
 public class DashManagerActivity extends AppCompatActivity {
-    ImageView ivIn, ivOut, ivHist, ivSett;
+    ImageView ivIn, ivOut, ivHist, ivSett, ivCuti, ivRekap;
     TextView username, jabatan, tvHari, tvTanggal, tvJam;
     private DatabaseReference reference;
     private FirebaseAuth firebaseAuth;
@@ -46,8 +45,9 @@ public class DashManagerActivity extends AppCompatActivity {
         tvTanggal = findViewById(R.id.tvTanggal_manager);
         ivIn = findViewById(R.id.iv_in_manager);
         ivOut = findViewById(R.id.iv_out_manager);
-        ivHist = findViewById(R.id.iv_hist_manager);
         ivSett = findViewById(R.id.iv_sett_manager);
+        ivCuti = findViewById(R.id.iv_cuti_manager);
+        ivRekap = findViewById(R.id.iv_rekap_manager);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         reference = FirebaseDatabase.getInstance().getReference();
 
@@ -75,14 +75,21 @@ public class DashManagerActivity extends AppCompatActivity {
             }
         });
 
-        ivHist.setOnClickListener(new View.OnClickListener() {
+        ivCuti.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(DashManagerActivity.this, HistoryActivity.class);
+                Intent intent = new Intent(DashManagerActivity.this, CutiManagerActivity.class);
                 startActivity(intent);
             }
         });
 
+        ivRekap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(DashManagerActivity.this, IntentActivity.class);
+                startActivity(intent);
+            }
+        });
 
 
         Calendar calendar = Calendar.getInstance();
@@ -98,7 +105,7 @@ public class DashManagerActivity extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
-        reference = FirebaseDatabase.getInstance().getReference("modelUser").child("ModelManager").child(firebaseUser.getUid());
+        reference = FirebaseDatabase.getInstance().getReference().child("TabelManager").child(firebaseUser.getUid());
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

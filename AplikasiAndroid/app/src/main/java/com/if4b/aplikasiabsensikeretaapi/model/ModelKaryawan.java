@@ -2,88 +2,104 @@ package com.if4b.aplikasiabsensikeretaapi.model;
 
 public class ModelKaryawan {
 
-        String username, email, password, konfirmasi, alamat, jabatan, nomor_hp, postId;
+    private String username;
+
+    private String nipp;
+    private String email;
+    private String password;
+    private String konfirmasi_password;
+    private String alamat;
+    private String penempatan;
+    private String jabatan;
+    private String no_hp;
 
         public ModelKaryawan() {
         }
 
-
-        public ModelKaryawan(String postId, String idUser,String username, String email, String password, String konfirmasi, String alamat, String jabatan, String nomor_hp) {
-            this.username = username;
-            this.email = email;
-            this.password = password;
-            this.konfirmasi = konfirmasi;
-            this.alamat = alamat;
-            this.jabatan = jabatan;
-            this.nomor_hp = nomor_hp;
-            this.postId = postId;
-        }
-
-        public String getPostId() {
-            return postId;
-        }
-
-        public void setPostId(String postId) {
-            this.postId = postId;
-        }
-
-
-        public String getUsername() {
-            return username;
-        }
-
-        public void setUsername(String username) {
-            this.username = username;
-        }
-
-        public String getEmail() {
-            return email;
-        }
-
-        public void setEmail(String email) {
-            this.email = email;
-        }
-
-        public String getPassword() {
-            return password;
-        }
-
-        public void setPassword(String password) {
-            this.password = password;
-        }
-
-        public String getKonfirmasi() {
-            return konfirmasi;
-        }
-
-        public void setKonfirmasi(String konfirmasi) {
-            this.konfirmasi = konfirmasi;
-        }
-
-        public String getAlamat() {
-            return alamat;
-        }
-
-        public void setAlamat(String alamat) {
-            this.alamat = alamat;
-        }
-
-        public String getJabatan() {
-            return jabatan;
-        }
-
-        public void setJabatan(String jabatan) {
-            this.jabatan = jabatan;
-        }
-
-        public String getNomor_hp() {
-            return nomor_hp;
-        }
-
-        public void setNomor_hp(String nomor) {
-            this.nomor_hp = nomor;
-        }
+    public ModelKaryawan(String username, String nipp, String email, String password, String konfirmasi_password, String alamat, String penempatan, String jabatan, String no_hp) {
+        this.username = username;
+        this.nipp = nipp;
+        this.email = email;
+        this.password = password;
+        this.konfirmasi_password = konfirmasi_password;
+        this.alamat = alamat;
+        this.penempatan = penempatan;
+        this.jabatan = jabatan;
+        this.no_hp = no_hp;
     }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getNipp() {
+        return nipp;
+    }
+
+    public void setNipp(String nipp) {
+        this.nipp = nipp;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getKonfirmasi_password() {
+        return konfirmasi_password;
+    }
+
+    public void setKonfirmasi_password(String konfirmasi_password) {
+        this.konfirmasi_password = konfirmasi_password;
+    }
+
+    public String getAlamat() {
+        return alamat;
+    }
+
+    public void setAlamat(String alamat) {
+        this.alamat = alamat;
+    }
+
+    public String getPenempatan() {
+        return penempatan;
+    }
+
+    public void setPenempatan(String penempatan) {
+        this.penempatan = penempatan;
+    }
+
+    public String getJabatan() {
+        return jabatan;
+    }
+
+    public void setJabatan(String jabatan) {
+        this.jabatan = jabatan;
+    }
+
+    public String getNo_hp() {
+        return no_hp;
+    }
+
+    public void setNo_hp(String no_hp) {
+        this.no_hp = no_hp;
+    }
+}
 
 
 

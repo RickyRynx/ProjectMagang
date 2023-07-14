@@ -18,6 +18,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.if4b.aplikasiabsensikeretaapi.R;
 import com.if4b.aplikasiabsensikeretaapi.model.ModelUser;
+import com.if4b.aplikasiabsensikeretaapi.viewKaryawan.AbsensiKeluarActivity;
+import com.if4b.aplikasiabsensikeretaapi.viewKaryawan.AbsensiMasukActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -74,13 +76,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ivHist.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, HistoryActivity.class);
-                startActivity(intent);
-            }
-        });
 
 
 

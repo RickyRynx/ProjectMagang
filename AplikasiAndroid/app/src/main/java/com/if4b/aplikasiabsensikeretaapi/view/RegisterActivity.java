@@ -23,11 +23,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.if4b.aplikasiabsensikeretaapi.model.ModelKaryawan;
-import com.if4b.aplikasiabsensikeretaapi.model.ModelManager;
 import com.if4b.aplikasiabsensikeretaapi.R;
-import com.if4b.aplikasiabsensikeretaapi.model.ModelProfil;
-import com.if4b.aplikasiabsensikeretaapi.model.ModelUser;
 
 import java.util.HashMap;
 
@@ -36,11 +32,13 @@ public class RegisterActivity extends AppCompatActivity {
     private DatabaseReference reference;
     FirebaseDatabase database;
     String[] jabatan = {"Karyawan", "Manager"};
-    AutoCompleteTextView autoText;
-    ArrayAdapter<String> adapterItems;
+
+    String[] penempatan = {"Kantor DIVRE III Palembang", "Kantor Sub DIVRE III Kertapati", "Kantor Depo LRT Palembang"};
+    AutoCompleteTextView autoTextJabatan, autoTextPenempatan;
+    ArrayAdapter<String> adapterJabatan, adapterPenempatan;
 
 
-    private EditText etUsername, etPassword, etKonfirmasiPassword, etAlamat, etNoHp, etEmail;
+    private EditText etUsername, etNipp, etPassword, etKonfirmasiPassword, etAlamat, etNoHp, etEmail;
     private Button btnReg;
     ProgressDialog progressDialog;
     FirebaseAuth mAuth;
@@ -53,6 +51,7 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         etUsername = findViewById(R.id.et_username);
+        etNipp = findViewById(R.id.et_nipp);
         etEmail = findViewById(R.id.et_email_register);
         etPassword = findViewById(R.id.et_passwordreg);
         etKonfirmasiPassword = findViewById(R.id.et_konfirmasi_password);
@@ -62,9 +61,12 @@ public class RegisterActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(this);
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
-        autoText = findViewById(R.id.auto_select_item);
-        adapterItems = new ArrayAdapter<String>(this, R.layout.list_select_dropdown, jabatan);
-        autoText.setAdapter(adapterItems);
+        autoTextJabatan= findViewById(R.id.auto_select_item);
+        autoTextPenempatan = findViewById(R.id.auto_penempatan_item);
+        adapterJabatan = new ArrayAdapter<String>(this, R.layout.list_select_dropdown, jabatan);
+        adapterPenempatan = new ArrayAdapter<String>(this, R.layout.list_select_dropdown, penempatan);
+        autoTextJabatan.setAdapter(adapterJabatan);
+        autoTextPenempatan.setAdapter(adapterPenempatan);
 
 
 
@@ -77,11 +79,19 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
-        autoText.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        autoTextJabatan.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String item = parent.getItemAtPosition(position).toString();
                 Toast.makeText(getApplicationContext(), "Masuk Sebagai: "+item, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        autoTextPenempatan.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String item = parent.getItemAtPosition(position).toString();
+                Toast.makeText(getApplicationContext(), "Lokasi Penempatan: "+item, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -91,11 +101,13 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String username = etUsername.getText().toString().trim();
+                String nipp = etNipp.getText().toString().trim();
                 String email = etEmail.getText().toString().trim();
                 String password = etPassword.getText().toString().trim();
                 String konfirmasiPassword = etKonfirmasiPassword.getText().toString().trim();
                 String alamat = etAlamat.getText().toString().trim();
-                String jabatan = autoText.getText().toString().trim();
+                String penempatan = autoTextPenempatan.getText().toString().trim();
+                String jabatan = autoTextJabatan.getText().toString().trim();
                 String noHp = etNoHp.getText().toString().trim();
 
 
@@ -103,9 +115,12 @@ public class RegisterActivity extends AppCompatActivity {
                 if (username.isEmpty()) {
                     etUsername.setError("Username tidak boleh kosong");
                     etUsername.requestFocus();
+                } else if (nipp.isEmpty()) {
+                    etNipp.setError("Password tidak boleh kosong");
+                    etNipp.requestFocus();
                 } else if (email.isEmpty()) {
-                    etPassword.setError("Password tidak boleh kosong");
-                    etPassword.requestFocus();
+                    etEmail.setError("Password tidak boleh kosong");
+                    etEmail.requestFocus();
                 } else if (password.isEmpty() || password.length() < 6) {
                     etPassword.setError("Password Minimum 6 Karakter");
                     etPassword.requestFocus();
@@ -119,21 +134,16 @@ public class RegisterActivity extends AppCompatActivity {
                     etNoHp.setError("Nomor HP tidak boleh kosong");
                     etNoHp.requestFocus();
                 } else {
-                    registerAuth(username, email, password, konfirmasiPassword, alamat, jabatan, noHp);
+                    registerAuth(username, nipp, email, password, konfirmasiPassword, alamat, penempatan, jabatan, noHp);
                 }
             }
         });
     }
 
-    private void registerAuth(String username, String email, String password, String konfirmasiPassword, String alamat, String jabatan, String noHp) {
+    private void registerAuth(String username, String nipp, String email, String password, String konfirmasiPassword, String alamat, String penempatan, String jabatan, String noHp) {
         progressDialog.setMessage("Loading Registrasi...");
         progressDialog.show();
         database = FirebaseDatabase.getInstance();
-        ModelUser modelUser = new ModelUser();
-        ModelKaryawan modelKaryawan = new ModelKaryawan();
-        ModelManager modelManager = new ModelManager();
-        ModelProfil modelProfil = new ModelProfil();
-        modelKaryawan.setNomor_hp(noHp);
         reference = database.getReference();
 
         mAuth.createUserWithEmailAndPassword(email, password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
@@ -142,10 +152,12 @@ public class RegisterActivity extends AppCompatActivity {
                 HashMap<String, Object> map = new HashMap<>();
                 map.put("id", mAuth.getCurrentUser().getUid());
                 map.put("username", username);
+                map.put("nipp", nipp);
                 map.put("email", email);
                 map.put("password", password);
                 map.put("konfirmasi_password", konfirmasiPassword);
                 map.put("alamat", alamat);
+                map.put("penempatan", penempatan);
                 map.put("jabatan", jabatan);
                 map.put("no_hp", noHp);
 

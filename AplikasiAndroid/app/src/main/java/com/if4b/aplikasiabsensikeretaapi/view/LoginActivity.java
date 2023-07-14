@@ -85,8 +85,8 @@ public class LoginActivity extends AppCompatActivity {
 
 
         if (email.isEmpty()) {
-            etPassword.setError("Password tidak boleh kosong");
-            etPassword.requestFocus();
+            etEmail.setError("Password tidak boleh kosong");
+            etEmail.requestFocus();
         } else if (password.isEmpty() || password.length()<6) {
             etPassword.setError("Password Minimum 6 Karakter");
             etPassword.requestFocus();
@@ -127,20 +127,20 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void loginAuthManager() {
-        String email = etEmail.getText().toString();
+        String nipp = etEmail.getText().toString();
         String password = etPassword.getText().toString();
 
 
 
-        if (email.isEmpty()) {
-            etPassword.setError("Password tidak boleh kosong");
-            etPassword.requestFocus();
+        if (nipp.isEmpty()) {
+            etEmail.setError("Password tidak boleh kosong");
+            etEmail.requestFocus();
         } else if (password.isEmpty() || password.length()<6) {
             etPassword.setError("Password Minimum 6 Karakter");
             etPassword.requestFocus();
         }  else {
 
-            mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            mAuth.signInWithEmailAndPassword(nipp, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
@@ -179,12 +179,14 @@ public class LoginActivity extends AppCompatActivity {
 
     private void loginKaryawan() {
         Intent intent = new Intent(LoginActivity.this, DashKaryawanActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
     }
 
     private void loginManager() {
         Intent intent = new Intent(LoginActivity.this, DashManagerActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
     }

@@ -35,15 +35,42 @@
         android:theme="@style/Theme.Material3.Light.NoActionBar"
         tools:targetApi="31">
         <activity
-            android:name=".RekapActivity"
+            android:name=".viewManager.RekapCutiActivity"
             android:exported="false" />
         <activity
-            android:name=".CutiActivity"
+            android:name=".viewManager.IntentActivity"
             android:exported="false" />
         <activity
-            android:name=".FaceIdActivity"
+            android:name=".viewManager.FaceIDManagerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".viewManager.AbsensiKeluarManagerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".viewManager.AbsensiMasukManagerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".viewKaryawan.ProfilActivity"
+            android:exported="false" />
+        <activity
+            android:name=".viewManager.ProfilManagerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".viewManager.RekapManagerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".viewManager.CutiManagerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".viewKaryawan.RekapActivity"
+            android:exported="false" />
+        <activity
+            android:name=".viewKaryawan.CutiActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.FaceIdActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".viewManager.SettingManagerActivity"
             android:exported="false" />
@@ -67,19 +94,13 @@
             android:name=".view.PrivacyActivity"
             android:exported="false" />
         <activity
-            android:name=".view.HistoryActivity"
-            android:exported="false" />
-        <activity
             android:name=".view.SettingActivity"
             android:exported="false" />
         <activity
-            android:name=".ProfilActivity"
+            android:name=".viewKaryawan.AbsensiKeluarActivity"
             android:exported="false" />
         <activity
-            android:name=".view.AbsensiKeluarActivity"
-            android:exported="false" />
-        <activity
-            android:name=".view.AbsensiMasukActivity"
+            android:name=".viewKaryawan.AbsensiMasukActivity"
             android:exported="false" />
         <activity
             android:name=".view.SplashActivity"

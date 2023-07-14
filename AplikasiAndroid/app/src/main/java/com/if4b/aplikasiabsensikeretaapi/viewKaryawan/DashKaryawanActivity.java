@@ -16,14 +16,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.if4b.aplikasiabsensikeretaapi.CutiActivity;
 import com.if4b.aplikasiabsensikeretaapi.R;
-import com.if4b.aplikasiabsensikeretaapi.RekapActivity;
 import com.if4b.aplikasiabsensikeretaapi.model.ModelKaryawan;
-import com.if4b.aplikasiabsensikeretaapi.model.ModelUser;
-import com.if4b.aplikasiabsensikeretaapi.view.AbsensiKeluarActivity;
-import com.if4b.aplikasiabsensikeretaapi.view.AbsensiMasukActivity;
-import com.if4b.aplikasiabsensikeretaapi.view.HistoryActivity;
 import com.if4b.aplikasiabsensikeretaapi.view.SettingActivity;
 
 import java.text.SimpleDateFormat;
@@ -32,7 +26,7 @@ import java.util.Date;
 import java.util.Locale;
 
 public class DashKaryawanActivity extends AppCompatActivity {
-    ImageView ivIn, ivOut, ivHist, ivSett, ivCuti, ivRekapan;
+    ImageView ivIn, ivOut, ivSett, ivCuti, ivRekapan;
     TextView username, jabatan, tvHari, tvTanggal, tvJam;
     private DatabaseReference reference;
     private FirebaseAuth firebaseAuth;
@@ -50,7 +44,6 @@ public class DashKaryawanActivity extends AppCompatActivity {
         tvTanggal = findViewById(R.id.tvTanggal_user);
         ivIn = findViewById(R.id.iv_in_user);
         ivOut = findViewById(R.id.iv_out_user);
-        ivHist = findViewById(R.id.iv_hist_user);
         ivSett = findViewById(R.id.iv_sett_user);
         ivCuti = findViewById(R.id.iv_cuti_user);
         ivRekapan = findViewById(R.id.iv_rekap_user);
@@ -81,13 +74,6 @@ public class DashKaryawanActivity extends AppCompatActivity {
             }
         });
 
-        ivHist.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(DashKaryawanActivity.this, HistoryActivity.class);
-                startActivity(intent);
-            }
-        });
 
         ivCuti.setOnClickListener(new View.OnClickListener() {
             @Override

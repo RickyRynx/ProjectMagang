@@ -3,16 +3,20 @@ package com.if4b.aplikasiabsensikeretaapi.model;
 public class ModelCuti {
     private String nama;
     private String jabatan;
-    private String keteranganCuti;
-    private String mulai;
-    private String selesai;
+    private String keterangan_cuti;
+    private String tanggal_mulai_cuti;
+    private String tanggal_selesai_cuti;
 
     public ModelCuti() {
+
+    }
+
+    public ModelCuti(String nama, String jabatan, String keterangan_cuti, String tanggal_mulai_cuti, String tanggal_selesai_cuti) {
         this.nama = nama;
         this.jabatan = jabatan;
-        this.keteranganCuti = keteranganCuti;
-        this.mulai = mulai;
-        this.selesai = selesai;
+        this.keterangan_cuti = keterangan_cuti;
+        this.tanggal_mulai_cuti = tanggal_mulai_cuti;
+        this.tanggal_selesai_cuti = tanggal_selesai_cuti;
     }
 
     public String getNama() {
@@ -31,27 +35,27 @@ public class ModelCuti {
         this.jabatan = jabatan;
     }
 
-    public String getKeteranganCuti() {
-        return keteranganCuti;
+    public String getKeterangan_cuti() {
+        return keterangan_cuti;
     }
 
-    public void setKeteranganCuti(String keteranganCuti) {
-        this.keteranganCuti = keteranganCuti;
+    public void setKeterangan_cuti(String keterangan_cuti) {
+        this.keterangan_cuti = keterangan_cuti;
     }
 
-    public String getMulai() {
-        return mulai;
+    public String getTanggal_mulai_cuti() {
+        return tanggal_mulai_cuti;
     }
 
-    public void setMulai(String mulai) {
-        this.mulai = mulai;
+    public void setTanggal_mulai_cuti(String tanggal_mulai_cuti) {
+        this.tanggal_mulai_cuti = tanggal_mulai_cuti;
     }
 
-    public String getSelesai() {
-        return selesai;
+    public String getTanggal_selesai_cuti() {
+        return tanggal_selesai_cuti;
     }
 
-    public void setSelesai(String selesai) {
-        this.selesai = selesai;
+    public void setTanggal_selesai_cuti(String tanggal_selesai_cuti) {
+        this.tanggal_selesai_cuti = tanggal_selesai_cuti;
     }
 }

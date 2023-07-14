@@ -1,38 +1,29 @@
 package com.if4b.aplikasiabsensikeretaapi.model;
 
 public class ModelManager{
-    String username, email, password, konfirmasi, alamat, jabatan, nomor, postId, idUser;
-
+    private String username;
+    private String nipp;
+    private String email;
+    private String password;
+    private String konfirmasi_password;
+    private String alamat;
+    private String penempatan;
+    private String jabatan;
+    private String no_hp;
     public ModelManager() {
     }
 
 
-    public ModelManager(String postId, String idUser,String username, String email, String password, String konfirmasi, String alamat, String jabatan, String nomor) {
+    public ModelManager(String username, String nipp, String email, String password, String konfirmasi_password, String alamat, String penempatan, String jabatan, String no_hp) {
         this.username = username;
+        this.nipp = nipp;
         this.email = email;
         this.password = password;
-        this.konfirmasi = konfirmasi;
+        this.konfirmasi_password = konfirmasi_password;
         this.alamat = alamat;
+        this.penempatan = penempatan;
         this.jabatan = jabatan;
-        this.nomor = nomor;
-        this.postId = postId;
-        this.idUser = idUser;
-    }
-
-    public String getPostId() {
-        return postId;
-    }
-
-    public void setPostId(String postId) {
-        this.postId = postId;
-    }
-
-    public String getIdUser() {
-        return idUser;
-    }
-
-    public void setIdUser(String idUser) {
-        this.idUser = idUser;
+        this.no_hp = no_hp;
     }
 
     public String getUsername() {
@@ -41,6 +32,14 @@ public class ModelManager{
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getNipp() {
+        return nipp;
+    }
+
+    public void setNipp(String nipp) {
+        this.nipp = nipp;
     }
 
     public String getEmail() {
@@ -59,12 +58,12 @@ public class ModelManager{
         this.password = password;
     }
 
-    public String getKonfirmasi() {
-        return konfirmasi;
+    public String getKonfirmasi_password() {
+        return konfirmasi_password;
     }
 
-    public void setKonfirmasi(String konfirmasi) {
-        this.konfirmasi = konfirmasi;
+    public void setKonfirmasi_password(String konfirmasi_password) {
+        this.konfirmasi_password = konfirmasi_password;
     }
 
     public String getAlamat() {
@@ -75,6 +74,14 @@ public class ModelManager{
         this.alamat = alamat;
     }
 
+    public String getPenempatan() {
+        return penempatan;
+    }
+
+    public void setPenempatan(String penempatan) {
+        this.penempatan = penempatan;
+    }
+
     public String getJabatan() {
         return jabatan;
     }
@@ -83,12 +90,12 @@ public class ModelManager{
         this.jabatan = jabatan;
     }
 
-    public String getNomor() {
-        return nomor;
+    public String getNo_hp() {
+        return no_hp;
     }
 
-    public void setNomor(String nomor) {
-        this.nomor = nomor;
+    public void setNo_hp(String no_hp) {
+        this.no_hp = no_hp;
     }
 }
 

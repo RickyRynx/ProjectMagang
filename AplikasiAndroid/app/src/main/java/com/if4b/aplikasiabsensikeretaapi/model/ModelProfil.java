@@ -4,81 +4,99 @@ public class ModelProfil {
 
 
         private String username;
+        private String nipp;
         private String email;
         private String password;
-        private String konfirmasi;
+        private String konfirmasi_password;
         private String alamat;
+        private String penempatan;
         private String jabatan;
         private String no_hp;
 
         public ModelProfil() {
         }
 
+    public ModelProfil(String username, String nipp, String email, String password, String konfirmasi_password, String alamat, String penempatan, String jabatan, String no_hp) {
+        this.username = username;
+        this.nipp = nipp;
+        this.email = email;
+        this.password = password;
+        this.konfirmasi_password = konfirmasi_password;
+        this.alamat = alamat;
+        this.penempatan = penempatan;
+        this.jabatan = jabatan;
+        this.no_hp = no_hp;
+    }
 
-        public ModelProfil(String username, String email, String password, String konfirmasi, String alamat, String jabatan, String no_hp) {
-            this.username = username;
-            this.email = email;
-            this.password = password;
-            this.konfirmasi = konfirmasi;
-            this.alamat = alamat;
-            this.jabatan = jabatan;
-            this.no_hp = no_hp;
-        }
+    public String getUsername() {
+        return username;
+    }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-        public String getUsername() {
-            return username;
-        }
+    public String getNipp() {
+        return nipp;
+    }
 
-        public void setUsername(String username) {
-            this.username = username;
-        }
+    public void setNipp(String nipp) {
+        this.nipp = nipp;
+    }
 
-        public String getEmail() {
-            return email;
-        }
+    public String getEmail() {
+        return email;
+    }
 
-        public void setEmail(String email) {
-            this.email = email;
-        }
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-        public String getPassword() {
-            return password;
-        }
+    public String getPassword() {
+        return password;
+    }
 
-        public void setPassword(String password) {
-            this.password = password;
-        }
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-        public String getKonfirmasi() {
-            return konfirmasi;
-        }
+    public String getKonfirmasi_password() {
+        return konfirmasi_password;
+    }
 
-        public void setKonfirmasi(String konfirmasi) {
-            this.konfirmasi = konfirmasi;
-        }
+    public void setKonfirmasi_password(String konfirmasi_password) {
+        this.konfirmasi_password = konfirmasi_password;
+    }
 
-        public String getAlamat() {
-            return alamat;
-        }
+    public String getAlamat() {
+        return alamat;
+    }
 
-        public void setAlamat(String alamat) {
-            this.alamat = alamat;
-        }
+    public void setAlamat(String alamat) {
+        this.alamat = alamat;
+    }
 
-        public String getJabatan() {
-            return jabatan;
-        }
+    public String getPenempatan() {
+        return penempatan;
+    }
 
-        public void setJabatan(String jabatan) {
-            this.jabatan = jabatan;
-        }
+    public void setPenempatan(String penempatan) {
+        this.penempatan = penempatan;
+    }
 
-        public String getNoHp() {
-            return no_hp;
-        }
+    public String getJabatan() {
+        return jabatan;
+    }
 
-        public void setNoHp(String no_hp) {
-            this.no_hp = no_hp;
-        }
+    public void setJabatan(String jabatan) {
+        this.jabatan = jabatan;
+    }
+
+    public String getNo_hp() {
+        return no_hp;
+    }
+
+    public void setNo_hp(String no_hp) {
+        this.no_hp = no_hp;
+    }
 }

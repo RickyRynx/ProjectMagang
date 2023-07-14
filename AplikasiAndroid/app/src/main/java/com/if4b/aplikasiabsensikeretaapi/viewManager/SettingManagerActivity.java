@@ -4,7 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -17,15 +19,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.if4b.aplikasiabsensikeretaapi.ProfilActivity;
 import com.if4b.aplikasiabsensikeretaapi.R;
-import com.if4b.aplikasiabsensikeretaapi.model.ModelUser;
-import com.if4b.aplikasiabsensikeretaapi.view.HistoryActivity;
+import com.if4b.aplikasiabsensikeretaapi.model.ModelManager;
 import com.if4b.aplikasiabsensikeretaapi.view.LoginActivity;
 import com.if4b.aplikasiabsensikeretaapi.view.PrivacyActivity;
 
 public class SettingManagerActivity extends AppCompatActivity {
-    ImageView ivHistory, ivPrivacy, ivLogout;
+    ImageView  ivPrivacy, ivLogout;
     TextView tvNama;
     AppCompatButton btnProfile;
     private DatabaseReference reference;
@@ -37,19 +37,11 @@ public class SettingManagerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting_manager);
 
-        ivHistory = findViewById(R.id.iv_history_manager);
         ivPrivacy = findViewById(R.id.iv_privacy_terms_manager);
         ivLogout = findViewById(R.id.iv_logout_manager);
         btnProfile = findViewById(R.id.btn_edit_profile_manager);
         tvNama = findViewById(R.id.tv_nama_setting_manager);
 
-        ivHistory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(SettingManagerActivity.this, HistoryActivity.class);
-                startActivity(intent);
-            }
-        });
 
         ivPrivacy.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,28 +54,27 @@ public class SettingManagerActivity extends AppCompatActivity {
         ivLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(SettingManagerActivity.this, LoginActivity.class);
-                startActivity(intent);
+                logout();
             }
         });
 
         btnProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(SettingManagerActivity.this, ProfilActivity.class);
+                Intent intent = new Intent(SettingManagerActivity.this, ProfilManagerActivity.class);
                 startActivity(intent);
             }
         });
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
-        reference = FirebaseDatabase.getInstance().getReference("modelUser").child("ModelUser").child(firebaseUser.getUid());
+        reference = FirebaseDatabase.getInstance().getReference().child("TabelManager").child(firebaseUser.getUid());
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    ModelUser modelUser = snapshot.getValue(ModelUser.class);
-                    tvNama.setText(modelUser.getUsername());
+                    ModelManager modelManager = snapshot.getValue(ModelManager.class);
+                    tvNama.setText(modelManager.getUsername());
                 }
 
             }
@@ -93,5 +84,19 @@ public class SettingManagerActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void logout() {
+        // Hapus data sesi atau token
+        SharedPreferences sharedPreferences = getSharedPreferences("session", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear();
+        editor.apply();
+
+        // Lanjutkan ke halaman login
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 }
