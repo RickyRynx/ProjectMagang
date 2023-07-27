@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -21,11 +22,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.if4b.aplikasiabsensikeretaapi.R;
 import com.if4b.aplikasiabsensikeretaapi.model.ModelManager;
+import com.if4b.aplikasiabsensikeretaapi.model.ModelProfil;
 import com.if4b.aplikasiabsensikeretaapi.view.LoginActivity;
 import com.if4b.aplikasiabsensikeretaapi.view.PrivacyActivity;
+import com.if4b.aplikasiabsensikeretaapi.viewKaryawan.ProfilActivity;
 
 public class SettingManagerActivity extends AppCompatActivity {
-    ImageView  ivPrivacy, ivLogout;
+    ImageView  ivPrivacy, ivLogout, ivBack, ivProfil;
     TextView tvNama;
     AppCompatButton btnProfile;
     private DatabaseReference reference;
@@ -41,6 +44,8 @@ public class SettingManagerActivity extends AppCompatActivity {
         ivLogout = findViewById(R.id.iv_logout_manager);
         btnProfile = findViewById(R.id.btn_edit_profile_manager);
         tvNama = findViewById(R.id.tv_nama_setting_manager);
+        ivBack = findViewById(R.id.iv_back_manager);
+        ivProfil = findViewById(R.id.iv_profile_manager);
 
 
         ivPrivacy.setOnClickListener(new View.OnClickListener() {
@@ -55,6 +60,14 @@ public class SettingManagerActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 logout();
+            }
+        });
+
+        ivBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(SettingManagerActivity.this, DashManagerActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -74,6 +87,13 @@ public class SettingManagerActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     ModelManager modelManager = snapshot.getValue(ModelManager.class);
+                    ModelProfil modelProfil = snapshot.getValue(ModelProfil.class);
+                    String urlFotoProfil = modelProfil.getUrl_foto_profil();
+                    if (urlFotoProfil != null) {
+                        Glide.with(SettingManagerActivity.this)
+                                .load(urlFotoProfil)
+                                .into(ivProfil);
+                    }
                     tvNama.setText(modelManager.getUsername());
                 }
 

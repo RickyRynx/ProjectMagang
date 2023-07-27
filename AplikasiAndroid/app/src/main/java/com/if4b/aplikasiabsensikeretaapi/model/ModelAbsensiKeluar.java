@@ -3,7 +3,7 @@ package com.if4b.aplikasiabsensikeretaapi.model;
 public class ModelAbsensiKeluar {
     String nama, jabatan, tanggal, alamat, kota, negara, latitude, longitude, postId;
 
-    public ModelAbsensiKeluar() {
+    public ModelAbsensiKeluar(String postId, String nama, String jabatan, String tanggal) {
 
     }
 

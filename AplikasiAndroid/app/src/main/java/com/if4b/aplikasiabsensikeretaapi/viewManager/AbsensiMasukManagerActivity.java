@@ -1,11 +1,21 @@
 package com.if4b.aplikasiabsensikeretaapi.viewManager;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
+
 import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -21,14 +31,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
-import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
@@ -55,16 +57,17 @@ import com.google.firebase.storage.UploadTask;
 import com.if4b.aplikasiabsensikeretaapi.R;
 import com.if4b.aplikasiabsensikeretaapi.model.ModelAbsensiMasuk;
 import com.if4b.aplikasiabsensikeretaapi.view.FaceIdActivity;
-
+import com.if4b.aplikasiabsensikeretaapi.viewKaryawan.AbsensiMasukActivity;
 
 import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 
-
 public class AbsensiMasukManagerActivity extends AppCompatActivity implements OnMapReadyCallback {
+
     EditText etTanggal;
     Calendar myCalendar;
     ImageView ivAbsen;
@@ -85,18 +88,18 @@ public class AbsensiMasukManagerActivity extends AppCompatActivity implements On
     private float circleRadius = 100f;
     private Circle circle;
     private FusedLocationProviderClient fusedLocationProviderClient;
-
+    private static final String PREFS_NAME = "AbsenMasukManager";
+    private static final String LAST_ABSEN_DATE = "BatasAbsenMasukManager";
 
     private static final int REQUEST_CODE = 100;
     private static final int MY_READ_PERMISSION_CODE = 101;
     private static final float DEFAULT_ZOOM = 18f;
     private static final int CAMERA_REQUEST_CODE = 200;
-
-
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_absensi_masuk);
+        setContentView(R.layout.activity_absensi_masuk_manager);
 
         ivAbsen = findViewById(R.id.iv_absen_manager);
         etTanggal = findViewById(R.id.et_tanggal_manager);
@@ -108,19 +111,16 @@ public class AbsensiMasukManagerActivity extends AppCompatActivity implements On
         reference = FirebaseDatabase.getInstance().getReference();
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
-        mapView = findViewById(R.id.map_view_in);
+        mapView = findViewById(R.id.map_view_in_manager);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
 
-
-
-        int jamAbsen = 20;
+        int jamAbsen = 24;
         if (hour >= jamAbsen) {
             btnAbsen.setEnabled(false);
         } else {
             btnAbsen.setEnabled(true);
         }
-
 
         btnUpload.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -140,8 +140,17 @@ public class AbsensiMasukManagerActivity extends AppCompatActivity implements On
                 if (tanggal.isEmpty()) {
                     etTanggal.setError("Tanggal Tidak Boleh Kosong");
                     etTanggal.requestFocus();
-                } else {
+                }
+
+                if (isAbsenAllowed()) {
+                    // Izinkan absensi
                     absenIn(tanggal, poto);
+                } else {
+                    Toast.makeText(AbsensiMasukManagerActivity.this, "Anda Sudah Melakukan Absensi Hari Ini!!.", Toast.LENGTH_SHORT).show();
+                }
+
+                if (!isAbsenAllowed()) {
+                    disableAbsenButton();
                 }
 
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(AbsensiMasukManagerActivity.this, "notification");
@@ -161,7 +170,7 @@ public class AbsensiMasukManagerActivity extends AppCompatActivity implements On
                     // for ActivityCompat#requestPermissions for more details.
                     return;
                 }
-                managerCompat.notify(5, builder.build());
+                managerCompat.notify(0, builder.build());
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     NotificationChannel channel = new NotificationChannel("notification", "notification", NotificationManager.IMPORTANCE_DEFAULT);
@@ -178,7 +187,7 @@ public class AbsensiMasukManagerActivity extends AppCompatActivity implements On
                     notificationManager.createNotificationChannel(channel);
                 }
 
-                //checkDistance();
+                checkDistance();
             }
         });
 
@@ -206,29 +215,34 @@ public class AbsensiMasukManagerActivity extends AppCompatActivity implements On
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     REQUEST_CODE);
         }
-
     }
 
+    private void updateLabel() {
+        String myFormat = "MM/yy/dd EEEE";
+        SimpleDateFormat dateFormat = new SimpleDateFormat(myFormat, Locale.US);
+        etTanggal.setText(dateFormat.format(myCalendar.getTime()));
+    }
 
+    private void disableAbsenButton() {
+        btnAbsen.setEnabled(false);
+    }
 
     private void checkDistance() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             fusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
                 @Override
                 public void onSuccess(Location location) {
-
                     if (location != null) {
                         float[] results = new float[1];
                         Location.distanceBetween(location.getLatitude(), location.getLongitude(), circleCenter.latitude, circleCenter.longitude, results);
 
                         float distance = results[0];
-                        if (distance == circleRadius) {
-                            // Jarak kurang dari atau sama dengan radius, aksi yang diinginkan
-                            Toast.makeText(AbsensiMasukManagerActivity.this, "Anda berada dalam radius", Toast.LENGTH_SHORT).show();
-
-                        } else if (distance >= circleRadius) {
-                            // Jarak melebihi radius, aksi yang diinginkan
-                            Toast.makeText(AbsensiMasukManagerActivity.this, "Anda berada di luar radius", Toast.LENGTH_SHORT).show();
+                        if (distance <= circleRadius) {
+                            // User is within the allowed radius
+                            Toast.makeText(AbsensiMasukManagerActivity.this,  "Anda Berada Di Dalam Radius", Toast.LENGTH_SHORT).show();
+                        } else {
+                            // User is outside the allowed radius
+                            Toast.makeText(AbsensiMasukManagerActivity.this, "Anda Berada Di Luar Radius", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
@@ -236,19 +250,19 @@ public class AbsensiMasukManagerActivity extends AppCompatActivity implements On
         }
     }
 
-
     private void absenIn(String tanggal, String poto) {
         Bitmap bitmap = ((BitmapDrawable) ivAbsen.getDrawable()).getBitmap();
         ByteArrayOutputStream baOs = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baOs);
         byte[] imageByte = baOs.toByteArray();
         database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("mUser");
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         String postId = ref.push().getKey();
         ModelAbsensiMasuk modelAbsensiMasuk = new ModelAbsensiMasuk();
         StorageReference imageRef = storageReference.child(poto);
         reference = database.getReference("TabelAbsensiMasukManager");
         reference.push().setValue(modelAbsensiMasuk);
+        saveLastAbsenDate();
 
 
 
@@ -270,11 +284,45 @@ public class AbsensiMasukManagerActivity extends AppCompatActivity implements On
                                 String downloadUrl = uri.toString();
 
                                 if (task.isSuccessful()) {
-                                    Intent intent = new Intent(AbsensiMasukManagerActivity.this, FaceIdActivity.class);
+                                    Intent intent = new Intent(AbsensiMasukManagerActivity.this, FaceIDManagerActivity.class);
                                     Toast.makeText(AbsensiMasukManagerActivity.this, "Absensi Masuk Berhasil!!", Toast.LENGTH_SHORT).show();
                                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                     startActivity(intent);
                                     finish();
+
+                                    NotificationCompat.Builder builder = new NotificationCompat.Builder(AbsensiMasukManagerActivity.this, "notification");
+                                    builder.setContentTitle("Absen Masuk");
+                                    builder.setContentText("Absen Masuk Berhasil!!.");
+                                    builder.setSmallIcon(R.drawable.ic_notification);
+                                    builder.setAutoCancel(true);
+
+                                    NotificationManagerCompat managerCompat = NotificationManagerCompat.from(AbsensiMasukManagerActivity.this);
+                                    if (ActivityCompat.checkSelfPermission(AbsensiMasukManagerActivity.this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                                        // TODO: Consider calling
+                                        //    ActivityCompat#requestPermissions
+                                        // here to request the missing permissions, and then overriding
+                                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                        //                                          int[] grantResults)
+                                        // to handle the case where the user grants the permission. See the documentation
+                                        // for ActivityCompat#requestPermissions for more details.
+                                        return;
+                                    }
+                                    managerCompat.notify(0, builder.build());
+
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                        NotificationChannel channel = new NotificationChannel("notification", "notification", NotificationManager.IMPORTANCE_DEFAULT);
+                                        NotificationManager manager = getSystemService(NotificationManager.class);
+                                        manager.createNotificationChannel(channel);
+
+                                        channel.enableLights(true);
+                                        channel.setLightColor(Color.RED);
+                                        channel.enableVibration(true);
+                                        channel.setVibrationPattern(new long[]{100, 200, 300, 400, 500});
+
+                                        // Terapkan channel pada NotificationManager
+                                        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+                                        notificationManager.createNotificationChannel(channel);
+                                    }
                                 }
                             }
                         });
@@ -289,9 +337,34 @@ public class AbsensiMasukManagerActivity extends AppCompatActivity implements On
                 Toast.makeText(AbsensiMasukManagerActivity.this, "Absensi Gagal!!", Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 
+    private void saveLastAbsenDate() {
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        // Mendapatkan tanggal saat ini
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        Date currentDate = Calendar.getInstance().getTime();
+        String todayDate = dateFormat.format(currentDate);
+
+        // Simpan tanggal saat ini ke SharedPreferences sebagai tanggal terakhir kali absen
+        editor.putString(LAST_ABSEN_DATE, todayDate);
+        editor.apply();
+    }
+
+    private boolean isAbsenAllowed() {
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        String lastAbsenDate = prefs.getString(LAST_ABSEN_DATE, "");
+
+        // Mendapatkan tanggal saat ini
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        Date currentDate = Calendar.getInstance().getTime();
+        String todayDate = dateFormat.format(currentDate);
+
+        // Membandingkan tanggal terakhir kali absen dengan tanggal saat ini
+        return !lastAbsenDate.equals(todayDate);
+    }
 
     @Override
     protected void onResume() {
@@ -343,14 +416,6 @@ public class AbsensiMasukManagerActivity extends AppCompatActivity implements On
         }
     }
 
-
-    private void updateLabel() {
-        String myFormat = "MM/yy/dd EEEE";
-        SimpleDateFormat dateFormat = new SimpleDateFormat(myFormat, Locale.US);
-        etTanggal.setText(dateFormat.format(myCalendar.getTime()));
-    }
-
-
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         myMap = googleMap;
@@ -368,8 +433,5 @@ public class AbsensiMasukManagerActivity extends AppCompatActivity implements On
                 .radius(circleRadius)
                 .strokeColor(Color.RED)
                 .fillColor(Color.argb(50, 255, 0, 0)));
-
-
     }
-
 }

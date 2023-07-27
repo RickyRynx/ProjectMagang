@@ -14,6 +14,8 @@ public class ModelAbsensiMasuk {
     private String longitude;
     private String poto;
 
+
+
     public ModelAbsensiMasuk() {
         this.nama = this.nama;
         this.tanggal = this.tanggal;

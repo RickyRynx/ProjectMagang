@@ -3,6 +3,7 @@ package com.if4b.aplikasiabsensikeretaapi.viewKaryawan;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
@@ -15,7 +16,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.if4b.aplikasiabsensikeretaapi.R;
 import com.if4b.aplikasiabsensikeretaapi.model.ModelKaryawan;
-import com.if4b.aplikasiabsensikeretaapi.model.ModelRekap;
+import com.if4b.aplikasiabsensikeretaapi.viewManager.RekapKaryawanActivity;
 
 public class RekapActivity extends AppCompatActivity {
     TextView tvNama, tvJumlah, tvPersen, tvHariKerja;
@@ -28,13 +29,11 @@ public class RekapActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rekap);
-        
-        totalAbsen = 0;
+
         tvNama = findViewById(R.id.tv_nama_rekap);
         tvJumlah = findViewById(R.id.tv_jumlah_absen_rekap);
         tvPersen = findViewById(R.id.tv_persentase_rekap);
         tvHariKerja = findViewById(R.id.tv_hari_kerja);
-        reference = FirebaseDatabase.getInstance().getReference();
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
@@ -43,8 +42,10 @@ public class RekapActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    ModelRekap modelRekap = snapshot.getValue(ModelRekap.class);
-                    tvNama.setText("Nama: " + modelRekap.getUsername());
+                    ModelKaryawan modelKaryawan = snapshot.getValue(ModelKaryawan.class);
+                    if (modelKaryawan != null) {
+                        tvNama.setText("Nama: " + modelKaryawan.getUsername());
+                    }
                 }
             }
 
@@ -58,7 +59,7 @@ public class RekapActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 totalAbsen = (int) snapshot.getChildrenCount();
-                tvJumlah.setText("Jumlah Absensi: " + totalAbsen );
+                tvJumlah.setText("Jumlah Absensi: " + totalAbsen);
                 int totalHariKerja = 20; // Jumlah hari kerja dalam sebulan
                 double persentaseAbsen = (totalAbsen / (double) totalHariKerja) * 100;
                 tvPersen.setText("Persentase Absen: " + persentaseAbsen + "%");
@@ -70,5 +71,41 @@ public class RekapActivity extends AppCompatActivity {
 
             }
         });
+
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        reference.removeEventListener(valueEventListener);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        reference.addValueEventListener(valueEventListener);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        reference.removeEventListener(valueEventListener);
+    }
+
+    private ValueEventListener valueEventListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot snapshot) {
+            if (snapshot.exists()) {
+                ModelKaryawan modelKaryawan = snapshot.getValue(ModelKaryawan.class);
+                if (modelKaryawan != null) {
+                    tvNama.setText("Nama: " + modelKaryawan.getUsername());
+                }
+            }
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError error) {
+
+        }
+    };
 }

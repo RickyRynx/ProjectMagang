@@ -12,11 +12,12 @@ public class ModelProfil {
         private String penempatan;
         private String jabatan;
         private String no_hp;
+        String url_foto_profil;
 
         public ModelProfil() {
         }
 
-    public ModelProfil(String username, String nipp, String email, String password, String konfirmasi_password, String alamat, String penempatan, String jabatan, String no_hp) {
+    public ModelProfil(String username, String nipp, String email, String password, String konfirmasi_password, String alamat, String penempatan, String jabatan, String no_hp, String url_foto_profil) {
         this.username = username;
         this.nipp = nipp;
         this.email = email;
@@ -26,6 +27,7 @@ public class ModelProfil {
         this.penempatan = penempatan;
         this.jabatan = jabatan;
         this.no_hp = no_hp;
+        this.url_foto_profil = url_foto_profil;
     }
 
     public String getUsername() {
@@ -98,5 +100,13 @@ public class ModelProfil {
 
     public void setNo_hp(String no_hp) {
         this.no_hp = no_hp;
+    }
+
+    public String getUrl_foto_profil() {
+        return url_foto_profil;
+    }
+
+    public void setUrl_foto_profil(String url_foto_profil) {
+        this.url_foto_profil = url_foto_profil;
     }
 }

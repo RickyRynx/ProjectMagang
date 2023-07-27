@@ -180,9 +180,9 @@ public class CutiManagerActivity extends AppCompatActivity {
         HashMap<String, Object> map = new HashMap<>();
         map.put("nama", nama);
         map.put("jabatan", jabatan);
-        map.put("keterangan cuti", keterangan);
-        map.put("tanggal mulai cuti", mulai);
-        map.put("tanggal selesai cuti", selesai);
+        map.put("keterangan_cuti", keterangan);
+        map.put("tanggal_mulai_cuti", mulai);
+        map.put("tanggal_selesai_cuti", selesai);
 
         reference.child(postId).setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

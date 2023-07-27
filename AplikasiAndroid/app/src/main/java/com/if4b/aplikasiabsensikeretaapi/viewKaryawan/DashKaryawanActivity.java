@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -18,7 +19,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.if4b.aplikasiabsensikeretaapi.R;
 import com.if4b.aplikasiabsensikeretaapi.model.ModelKaryawan;
+import com.if4b.aplikasiabsensikeretaapi.model.ModelProfil;
 import com.if4b.aplikasiabsensikeretaapi.view.SettingActivity;
+import com.if4b.aplikasiabsensikeretaapi.viewManager.SettingManagerActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -26,7 +29,7 @@ import java.util.Date;
 import java.util.Locale;
 
 public class DashKaryawanActivity extends AppCompatActivity {
-    ImageView ivIn, ivOut, ivSett, ivCuti, ivRekapan;
+    ImageView ivIn, ivOut, ivSett, ivCuti, ivRekapan, ivProfil;
     TextView username, jabatan, tvHari, tvTanggal, tvJam;
     private DatabaseReference reference;
     private FirebaseAuth firebaseAuth;
@@ -46,6 +49,7 @@ public class DashKaryawanActivity extends AppCompatActivity {
         ivOut = findViewById(R.id.iv_out_user);
         ivSett = findViewById(R.id.iv_sett_user);
         ivCuti = findViewById(R.id.iv_cuti_user);
+        ivProfil = findViewById(R.id.iv_profil_user);
         ivRekapan = findViewById(R.id.iv_rekap_user);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         reference = FirebaseDatabase.getInstance().getReference();
@@ -91,6 +95,14 @@ public class DashKaryawanActivity extends AppCompatActivity {
             }
         });
 
+        ivProfil.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(DashKaryawanActivity.this, ProfilActivity.class);
+                startActivity(intent);
+            }
+        });
+
 
 
         Calendar calendar = Calendar.getInstance();
@@ -112,6 +124,13 @@ public class DashKaryawanActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     ModelKaryawan modelKaryawan = snapshot.getValue(ModelKaryawan.class);
+                    ModelProfil modelProfil = snapshot.getValue(ModelProfil.class);
+                    String urlFotoProfil = modelProfil.getUrl_foto_profil();
+                    if (urlFotoProfil != null) {
+                        Glide.with(DashKaryawanActivity.this)
+                                .load(urlFotoProfil)
+                                .into(ivProfil);
+                    }
                     username.setText(modelKaryawan.getUsername());
                     jabatan.setText(modelKaryawan.getJabatan());
                 }
@@ -123,7 +142,6 @@ public class DashKaryawanActivity extends AppCompatActivity {
 
             }
         });
-
 
 
     }

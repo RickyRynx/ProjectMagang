@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -21,11 +22,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.if4b.aplikasiabsensikeretaapi.R;
 import com.if4b.aplikasiabsensikeretaapi.model.ModelKaryawan;
+import com.if4b.aplikasiabsensikeretaapi.model.ModelProfil;
 import com.if4b.aplikasiabsensikeretaapi.viewKaryawan.DashKaryawanActivity;
 import com.if4b.aplikasiabsensikeretaapi.viewKaryawan.ProfilActivity;
+import com.if4b.aplikasiabsensikeretaapi.viewManager.SettingManagerActivity;
 
 public class SettingActivity extends AppCompatActivity {
-    ImageView ivPrivacy, ivLogout, ivBack;
+    ImageView ivPrivacy, ivLogout, ivBack, ivProfil;
     TextView tvNama;
     AppCompatButton btnProfile;
     private DatabaseReference reference;
@@ -40,6 +43,7 @@ public class SettingActivity extends AppCompatActivity {
         ivPrivacy = findViewById(R.id.iv_privacy_terms);
         ivLogout = findViewById(R.id.iv_logout_setting);
         ivBack = findViewById(R.id.iv_back_setting);
+        ivProfil = findViewById(R.id.iv_profile_karyawan);
         btnProfile = findViewById(R.id.btn_edit_profile);
         tvNama = findViewById(R.id.tv_nama_setting);
 
@@ -85,6 +89,13 @@ public class SettingActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     ModelKaryawan modelKaryawan = snapshot.getValue(ModelKaryawan.class);
+                    ModelProfil modelProfil = snapshot.getValue(ModelProfil.class);
+                    String urlFotoProfil = modelProfil.getUrl_foto_profil();
+                    if (urlFotoProfil != null) {
+                        Glide.with(SettingActivity.this)
+                                .load(urlFotoProfil)
+                                .into(ivProfil);
+                    }
                     tvNama.setText(modelKaryawan.getUsername());
                 }
 
@@ -107,7 +118,7 @@ public class SettingActivity extends AppCompatActivity {
         editor.apply();
 
         // Lanjutkan ke halaman login
-        Intent intent = new Intent(this, LoginActivity.class);
+        Intent intent = new Intent(SettingActivity.this, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();

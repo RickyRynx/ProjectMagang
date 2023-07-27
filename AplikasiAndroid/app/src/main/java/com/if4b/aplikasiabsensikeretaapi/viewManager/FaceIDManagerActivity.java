@@ -192,7 +192,7 @@ public class FaceIDManagerActivity extends CameraActivity {
                             String downloadUrl = uri.toString();
                             // Simpan URL download ke Firebase Realtime Database atau lakukan tindakan sesuai kebutuhan
                             Toast.makeText(FaceIDManagerActivity.this, "Foto berhasil diunggah", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(FaceIDManagerActivity.this, DashKaryawanActivity.class);
+                            Intent intent = new Intent(FaceIDManagerActivity.this, DashManagerActivity.class);
                             startActivity(intent);
                             finish();
                         }

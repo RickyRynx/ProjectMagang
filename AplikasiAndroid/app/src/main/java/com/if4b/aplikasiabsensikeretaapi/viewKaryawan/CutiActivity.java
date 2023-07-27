@@ -152,7 +152,7 @@ public class CutiActivity extends AppCompatActivity {
 
     private void pengajuanCuti(String nama, String jabatan, String keterangan, String mulai, String selesai) {
         database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("mUser");
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         String postId = ref.push().getKey();
         ModelCuti modelCuti = new ModelCuti();
         reference = database.getReference("TabelPengajuanCuti");

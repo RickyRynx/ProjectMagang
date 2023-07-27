@@ -1,4 +1,4 @@
-package com.if4b.aplikasiabsensikeretaapi.viewManager;
+package com.if4b.aplikasiabsensikeretaapi;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,8 +7,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import com.if4b.aplikasiabsensikeretaapi.R;
 import com.if4b.aplikasiabsensikeretaapi.viewKaryawan.RekapActivity;
+import com.if4b.aplikasiabsensikeretaapi.viewManager.RekapCutiActivity;
+import com.if4b.aplikasiabsensikeretaapi.viewManager.RekapKaryawanActivity;
+import com.if4b.aplikasiabsensikeretaapi.viewManager.RekapManagerActivity;
 
 public class IntentActivity extends AppCompatActivity {
     Button btnAbsen, btnCuti, btnAbsenKaryawan;
@@ -41,7 +43,7 @@ public class IntentActivity extends AppCompatActivity {
         btnAbsenKaryawan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(IntentActivity.this, RekapActivity.class);
+                Intent intent = new Intent(IntentActivity.this, RekapKaryawanActivity.class);
                 startActivity(intent);
             }
         });

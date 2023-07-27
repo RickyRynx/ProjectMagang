@@ -38,6 +38,7 @@
             android:orientation="vertical">
 
             <ImageView
+                android:id="@+id/iv_profile_karyawan"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_gravity="center"

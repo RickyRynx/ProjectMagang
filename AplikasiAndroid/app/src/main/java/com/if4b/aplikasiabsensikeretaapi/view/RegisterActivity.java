@@ -168,10 +168,10 @@ public class RegisterActivity extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 progressDialog.dismiss();
                                 Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-                                Toast.makeText(RegisterActivity.this, "Register Berhasil!!", Toast.LENGTH_SHORT).show();
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 startActivity(intent);
                                 finish();
+                                Toast.makeText(RegisterActivity.this, "Register Berhasil!!", Toast.LENGTH_SHORT).show();
                             }
                         }
                     }).addOnFailureListener(new OnFailureListener() {
@@ -192,6 +192,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 startActivity(intent);
                                 finish();
+                                Toast.makeText(RegisterActivity.this, "Register Berhasil!!", Toast.LENGTH_SHORT).show();
                             }
                         }
                     }).addOnFailureListener(new OnFailureListener() {

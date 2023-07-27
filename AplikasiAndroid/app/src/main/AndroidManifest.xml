@@ -35,19 +35,22 @@
         android:theme="@style/Theme.Material3.Light.NoActionBar"
         tools:targetApi="31">
         <activity
-            android:name=".viewManager.RekapCutiActivity"
-            android:exported="false" />
-        <activity
-            android:name=".viewManager.IntentActivity"
-            android:exported="false" />
-        <activity
-            android:name=".viewManager.FaceIDManagerActivity"
-            android:exported="false" />
-        <activity
             android:name=".viewManager.AbsensiKeluarManagerActivity"
             android:exported="false" />
         <activity
             android:name=".viewManager.AbsensiMasukManagerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".viewManager.RekapKaryawanActivity"
+            android:exported="false" />
+        <activity
+            android:name=".viewManager.RekapCutiActivity"
+            android:exported="false" />
+        <activity
+            android:name=".IntentActivity"
+            android:exported="false" />
+        <activity
+            android:name=".viewManager.FaceIDManagerActivity"
             android:exported="false" />
         <activity
             android:name=".viewKaryawan.ProfilActivity"

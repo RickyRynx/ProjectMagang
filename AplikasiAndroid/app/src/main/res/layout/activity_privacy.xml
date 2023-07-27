@@ -1,9 +1,212 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".view.PrivacyActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Privacy and Terms"
+        android:textStyle="bold"
+        android:textSize="25sp"
+        android:gravity="center"
+        android:layout_marginTop="25dp"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_kebijakan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:layout_marginTop="15dp"
+            android:textStyle="bold"
+            android:layout_marginLeft="10dp"/>
+
+            <me.biubiubiu.justifytext.library.JustifyTextView
+                android:id="@+id/tv_desc_kebijakan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_kebijakan"
+                android:layout_marginTop="5dp"
+                android:textSize="16sp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="15dp"
+                />
+
+            <TextView
+                android:id="@+id/tv_pengumpulan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_desc_kebijakan"
+                android:textSize="18sp"
+                android:layout_marginTop="10dp"
+                android:textStyle="bold"
+                android:layout_marginLeft="10dp"/>
+
+            <me.biubiubiu.justifytext.library.JustifyTextView
+                android:id="@+id/tv_desc_pengumpulan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_pengumpulan"
+                android:textSize="16sp"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="15dp"/>
+
+            <TextView
+                android:id="@+id/tv_penggunaan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_desc_pengumpulan"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"/>
+
+            <me.biubiubiu.justifytext.library.JustifyTextView
+                android:id="@+id/tv_desc_penggunaan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_penggunaan"
+                android:layout_marginTop="5dp"
+                android:textSize="16sp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="15dp"
+                />
+
+            <TextView
+                android:id="@+id/tv_bagikan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_desc_penggunaan"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"/>
+
+            <me.biubiubiu.justifytext.library.JustifyTextView
+                android:id="@+id/tv_desc_bagikan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_bagikan"
+                android:textSize="16sp"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="15dp"/>
+
+            <TextView
+                android:id="@+id/tv_keamanan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_desc_bagikan"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"/>
+
+            <me.biubiubiu.justifytext.library.JustifyTextView
+                android:id="@+id/tv_desc_keamanan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_keamanan"
+                android:textSize="16sp"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="15dp"/>
+
+            <TextView
+                android:id="@+id/tv_izin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_desc_keamanan"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"/>
+
+            <me.biubiubiu.justifytext.library.JustifyTextView
+                android:id="@+id/tv_desc_izin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_izin"
+                android:textSize="16sp"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="15dp"/>
+
+            <TextView
+                android:id="@+id/tv_cookie"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_desc_izin"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"/>
+
+            <me.biubiubiu.justifytext.library.JustifyTextView
+                android:id="@+id/tv_desc_cookie"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_cookie"
+                android:textSize="16sp"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="15dp"/>
+
+            <TextView
+                android:id="@+id/tv_kontak"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_desc_cookie"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"/>
+
+            <me.biubiubiu.justifytext.library.JustifyTextView
+                android:id="@+id/tv_desc_kontak"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_kontak"
+                android:textSize="16sp"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="15dp"/>
+
+            <TextView
+                android:id="@+id/tv_pembaruan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_desc_kontak"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"/>
+
+            <me.biubiubiu.justifytext.library.JustifyTextView
+                android:id="@+id/tv_desc_pembaruan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_pembaruan"
+                android:textSize="16sp"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="15dp"/>
+
+        </RelativeLayout>
+    </ScrollView>
+
+</LinearLayout>

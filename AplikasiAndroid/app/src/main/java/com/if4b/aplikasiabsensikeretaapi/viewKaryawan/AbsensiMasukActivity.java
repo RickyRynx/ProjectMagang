@@ -5,7 +5,9 @@ import android.app.DatePickerDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -60,6 +62,7 @@ import com.if4b.aplikasiabsensikeretaapi.view.FaceIdActivity;
 import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 
@@ -85,6 +88,8 @@ public class AbsensiMasukActivity extends AppCompatActivity implements OnMapRead
     private float circleRadius = 100f;
     private Circle circle;
     private FusedLocationProviderClient fusedLocationProviderClient;
+    private static final String PREFS_NAME = "AbsenMasukKaryawan";
+    private static final String LAST_ABSEN_DATE = "BatasAbsenMasukKaryawan";
 
 
     private static final int REQUEST_CODE = 100;
@@ -114,7 +119,7 @@ public class AbsensiMasukActivity extends AppCompatActivity implements OnMapRead
 
 
 
-        int jamAbsen = 20;
+        int jamAbsen = 24;
         if (hour >= jamAbsen) {
             btnAbsen.setEnabled(false);
         } else {
@@ -140,8 +145,17 @@ public class AbsensiMasukActivity extends AppCompatActivity implements OnMapRead
                 if (tanggal.isEmpty()) {
                     etTanggal.setError("Tanggal Tidak Boleh Kosong");
                     etTanggal.requestFocus();
-                } else {
+                }
+
+                if (isAbsenAllowed()) {
+                    // Izinkan absensi
                     absenIn(tanggal, poto);
+                } else {
+                    Toast.makeText(AbsensiMasukActivity.this, "Anda Sudah Melakukan Absensi Hari Ini!!.", Toast.LENGTH_SHORT).show();
+                }
+
+                if (!isAbsenAllowed()) {
+                    disableAbsenButton();
                 }
 
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(AbsensiMasukActivity.this, "notification");
@@ -178,7 +192,7 @@ public class AbsensiMasukActivity extends AppCompatActivity implements OnMapRead
                     notificationManager.createNotificationChannel(channel);
                 }
 
-                //checkDistance();
+                checkDistance();
             }
         });
 
@@ -209,6 +223,23 @@ public class AbsensiMasukActivity extends AppCompatActivity implements OnMapRead
 
     }
 
+    private void disableAbsenButton() {
+        btnAbsen.setEnabled(false);
+    }
+
+    private boolean isAbsenAllowed() {
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        String lastAbsenDate = prefs.getString(LAST_ABSEN_DATE, "");
+
+        // Mendapatkan tanggal saat ini
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        Date currentDate = Calendar.getInstance().getTime();
+        String todayDate = dateFormat.format(currentDate);
+
+        // Membandingkan tanggal terakhir kali absen dengan tanggal saat ini
+        return !lastAbsenDate.equals(todayDate);
+    }
+
 
 
     private void checkDistance() {
@@ -216,19 +247,17 @@ public class AbsensiMasukActivity extends AppCompatActivity implements OnMapRead
             fusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
                 @Override
                 public void onSuccess(Location location) {
-
                     if (location != null) {
                         float[] results = new float[1];
                         Location.distanceBetween(location.getLatitude(), location.getLongitude(), circleCenter.latitude, circleCenter.longitude, results);
 
                         float distance = results[0];
-                        if (distance == circleRadius) {
-                            // Jarak kurang dari atau sama dengan radius, aksi yang diinginkan
-                            Toast.makeText(AbsensiMasukActivity.this, "Anda berada dalam radius", Toast.LENGTH_SHORT).show();
-
-                        } else if (distance >= circleRadius) {
-                            // Jarak melebihi radius, aksi yang diinginkan
-                            Toast.makeText(AbsensiMasukActivity.this, "Anda berada di luar radius", Toast.LENGTH_SHORT).show();
+                        if (distance <= circleRadius) {
+                            // User is within the allowed radius
+                            Toast.makeText(AbsensiMasukActivity.this,  "Anda Berada Di Dalam Radius", Toast.LENGTH_SHORT).show();
+                        } else {
+                            // User is outside the allowed radius
+                            Toast.makeText(AbsensiMasukActivity.this, "Anda Berada Di Luar Radius", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
@@ -243,12 +272,13 @@ public class AbsensiMasukActivity extends AppCompatActivity implements OnMapRead
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baOs);
         byte[] imageByte = baOs.toByteArray();
         database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("mUser");
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         String postId = ref.push().getKey();
         ModelAbsensiMasuk modelAbsensiMasuk = new ModelAbsensiMasuk();
         StorageReference imageRef = storageReference.child(poto);
         reference = database.getReference("TabelAbsensiMasukKaryawan");
         reference.push().setValue(modelAbsensiMasuk);
+        saveLastAbsenDate();
 
 
 
@@ -275,6 +305,39 @@ public class AbsensiMasukActivity extends AppCompatActivity implements OnMapRead
                                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                     startActivity(intent);
                                     finish();
+                                    NotificationCompat.Builder builder = new NotificationCompat.Builder(AbsensiMasukActivity.this, "notification");
+                                    builder.setContentTitle("Absen Masuk");
+                                    builder.setContentText("Absen Masuk Berhasil!!.");
+                                    builder.setSmallIcon(R.drawable.ic_notification);
+                                    builder.setAutoCancel(true);
+
+                                    NotificationManagerCompat managerCompat = NotificationManagerCompat.from(AbsensiMasukActivity.this);
+                                    if (ActivityCompat.checkSelfPermission(AbsensiMasukActivity.this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                                        // TODO: Consider calling
+                                        //    ActivityCompat#requestPermissions
+                                        // here to request the missing permissions, and then overriding
+                                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                        //                                          int[] grantResults)
+                                        // to handle the case where the user grants the permission. See the documentation
+                                        // for ActivityCompat#requestPermissions for more details.
+                                        return;
+                                    }
+                                    managerCompat.notify(0, builder.build());
+
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                        NotificationChannel channel = new NotificationChannel("notification", "notification", NotificationManager.IMPORTANCE_DEFAULT);
+                                        NotificationManager manager = getSystemService(NotificationManager.class);
+                                        manager.createNotificationChannel(channel);
+
+                                        channel.enableLights(true);
+                                        channel.setLightColor(Color.RED);
+                                        channel.enableVibration(true);
+                                        channel.setVibrationPattern(new long[]{100, 200, 300, 400, 500});
+
+                                        // Terapkan channel pada NotificationManager
+                                        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+                                        notificationManager.createNotificationChannel(channel);
+                                    }
                                 }
                             }
                         });
@@ -290,6 +353,20 @@ public class AbsensiMasukActivity extends AppCompatActivity implements OnMapRead
             }
         });
 
+    }
+
+    private void saveLastAbsenDate() {
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        // Mendapatkan tanggal saat ini
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        Date currentDate = Calendar.getInstance().getTime();
+        String todayDate = dateFormat.format(currentDate);
+
+        // Simpan tanggal saat ini ke SharedPreferences sebagai tanggal terakhir kali absen
+        editor.putString(LAST_ABSEN_DATE, todayDate);
+        editor.apply();
     }
 
 
@@ -368,8 +445,6 @@ public class AbsensiMasukActivity extends AppCompatActivity implements OnMapRead
                 .radius(circleRadius)
                 .strokeColor(Color.RED)
                 .fillColor(Color.argb(50, 255, 0, 0)));
-
-
     }
 
 }

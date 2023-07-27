@@ -6,12 +6,23 @@
     android:layout_height="match_parent"
     tools:context=".viewKaryawan.AbsensiKeluarActivity">
 
+    <TextView
+        android:id="@+id/tv_absen_keluar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:text="Absensi Keluar"
+        android:gravity="center"
+        android:textSize="30sp"
+        android:textColor="#000000"
+        android:textStyle="bold"/>
 
     <EditText
         android:id="@+id/etNama"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Masukkan nama"
+        android:layout_below="@id/tv_absen_keluar"
         android:layout_marginTop="10dp" />
 
     <EditText
@@ -37,7 +48,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/etTgl"
-        android:text="Absen Keluar"
+        android:text="Silahkan Absen Keluar"
         android:layout_marginTop="10dp"/>
 
 </RelativeLayout>

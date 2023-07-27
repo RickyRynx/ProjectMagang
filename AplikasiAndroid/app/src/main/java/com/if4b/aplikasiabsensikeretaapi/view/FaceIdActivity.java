@@ -1,10 +1,5 @@
 package com.if4b.aplikasiabsensikeretaapi.view;
 
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
-
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
@@ -20,14 +15,20 @@ import android.util.Log;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import org.opencv.core.Mat;
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -41,6 +42,7 @@ import org.opencv.android.CameraActivity;
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
+import org.opencv.core.Mat;
 import org.opencv.core.MatOfRect;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
@@ -61,14 +63,15 @@ public class FaceIdActivity extends CameraActivity {
     private CameraBridgeViewBase mOpenCameraView;
     private CascadeClassifier cascadeClassifier;
     private Mat grayscaleImage;
-    Button btnVerif;
+    private TextView tvFaceDetected;
     private DatabaseReference reference;
-    FirebaseDatabase database;
-
+    private FirebaseDatabase database;
     private FirebaseStorage storage;
     private StorageReference storageReference;
-    ProgressDialog progressDialog;
-
+    private ProgressDialog progressDialog;
+    private Button btnVerif;
+    private FirebaseUser firebaseUser;
+    private FirebaseAuth mAuth;
 
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
         @Override
@@ -111,7 +114,7 @@ public class FaceIdActivity extends CameraActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_face_id);
 
-        mOpenCameraView = (CameraBridgeViewBase) findViewById(R.id.camera_view);
+        mOpenCameraView = findViewById(R.id.camera_view);
         mOpenCameraView.setVisibility(SurfaceView.VISIBLE);
         mOpenCameraView.setCvCameraViewListener(cvCameraViewListener);
         mOpenCameraView.setCameraIndex(CameraBridgeViewBase.CAMERA_ID_FRONT);
@@ -120,14 +123,19 @@ public class FaceIdActivity extends CameraActivity {
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
         progressDialog = new ProgressDialog(this);
+        mAuth = FirebaseAuth.getInstance();
+        firebaseUser = mAuth.getCurrentUser();
+
         btnVerif = findViewById(R.id.btn_face_verifikasi);
+
+
 
         btnVerif.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 takePhoto();
 
-
+                // Buat dan tampilkan notifikasi "Verifikasi Wajah Berhasil"
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(FaceIdActivity.this, "notification");
                 builder.setContentTitle("Absen Masuk");
                 builder.setContentText("Verifikasi Wajah Berhasil!!.");
@@ -191,10 +199,23 @@ public class FaceIdActivity extends CameraActivity {
                         public void onSuccess(Uri uri) {
                             String downloadUrl = uri.toString();
                             // Simpan URL download ke Firebase Realtime Database atau lakukan tindakan sesuai kebutuhan
-                            Toast.makeText(FaceIdActivity.this, "Foto berhasil diunggah", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(FaceIdActivity.this, DashKaryawanActivity.class);
-                            startActivity(intent);
-                            finish();
+                            reference.child("TabelWajah").child(firebaseUser.getUid()).child("url_wajah").setValue(downloadUrl)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            // Tindakan setelah URL berhasil disimpan
+                                            Toast.makeText(FaceIdActivity.this, "Foto berhasil diunggah dan URL wajah berhasil disimpan", Toast.LENGTH_SHORT).show();
+                                            Intent intent = new Intent(FaceIdActivity.this, DashKaryawanActivity.class);
+                                            startActivity(intent);
+                                            finish();
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(FaceIdActivity.this, "Gagal menyimpan URL wajah", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
@@ -209,9 +230,7 @@ public class FaceIdActivity extends CameraActivity {
                 progressDialog.dismiss();
             }
         });
-
     }
-
 
     @Override
     protected List<?extends CameraBridgeViewBase> getCameraViewList() {
@@ -259,19 +278,11 @@ public class FaceIdActivity extends CameraActivity {
                 if (frame.empty() || frame.cols() == 0 || frame.rows() == 0) {
                     return grayscaleImage;
                 }
-
             }
 
             return grayscaleImage;
-
         }
-
-
     };
-
-
-
-
 
     @Override
     protected void onResume() {
@@ -300,3 +311,4 @@ public class FaceIdActivity extends CameraActivity {
         }
     }
 }
+

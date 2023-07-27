@@ -1,6 +1,7 @@
 package com.if4b.aplikasiabsensikeretaapi.model;
 
 public class ModelRekapCuti {
+    private String rekapId;
     private String nama;
     private String jabatan;
     private String keterangan_cuti;
@@ -8,15 +9,23 @@ public class ModelRekapCuti {
     private String tanggal_selesai_cuti;
 
     public ModelRekapCuti() {
-
     }
 
-    public ModelRekapCuti(String nama, String jabatan, String keterangan_cuti, String tanggal_mulai_cuti, String tanggal_selesai_cuti) {
+    public ModelRekapCuti(String rekapId, String nama, String jabatan, String keterangan_cuti, String tanggal_mulai_cuti, String tanggal_selesai_cuti) {
+        this.rekapId = rekapId;
         this.nama = nama;
         this.jabatan = jabatan;
         this.keterangan_cuti = keterangan_cuti;
         this.tanggal_mulai_cuti = tanggal_mulai_cuti;
         this.tanggal_selesai_cuti = tanggal_selesai_cuti;
+    }
+
+    public String getRekapId() {
+        return rekapId;
+    }
+
+    public void setRekapId(String rekapId) {
+        this.rekapId = rekapId;
     }
 
     public String getNama() {

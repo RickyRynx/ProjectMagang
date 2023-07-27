@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -16,10 +17,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.if4b.aplikasiabsensikeretaapi.IntentActivity;
 import com.if4b.aplikasiabsensikeretaapi.model.ModelManager;
 import com.if4b.aplikasiabsensikeretaapi.R;
+import com.if4b.aplikasiabsensikeretaapi.model.ModelProfil;
 import com.if4b.aplikasiabsensikeretaapi.viewKaryawan.AbsensiKeluarActivity;
 import com.if4b.aplikasiabsensikeretaapi.viewKaryawan.AbsensiMasukActivity;
+import com.if4b.aplikasiabsensikeretaapi.viewKaryawan.DashKaryawanActivity;
+import com.if4b.aplikasiabsensikeretaapi.viewKaryawan.ProfilActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -27,7 +32,7 @@ import java.util.Date;
 import java.util.Locale;
 
 public class DashManagerActivity extends AppCompatActivity {
-    ImageView ivIn, ivOut, ivHist, ivSett, ivCuti, ivRekap;
+    ImageView ivIn, ivOut, ivHist, ivSett, ivCuti, ivRekap, ivProfil;
     TextView username, jabatan, tvHari, tvTanggal, tvJam;
     private DatabaseReference reference;
     private FirebaseAuth firebaseAuth;
@@ -48,13 +53,14 @@ public class DashManagerActivity extends AppCompatActivity {
         ivSett = findViewById(R.id.iv_sett_manager);
         ivCuti = findViewById(R.id.iv_cuti_manager);
         ivRekap = findViewById(R.id.iv_rekap_manager);
+        ivProfil = findViewById(R.id.iv_profil_manager);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         reference = FirebaseDatabase.getInstance().getReference();
 
         ivIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(DashManagerActivity.this, AbsensiMasukActivity.class);
+                Intent intent = new Intent(DashManagerActivity.this, AbsensiMasukManagerActivity.class);
                 startActivity(intent);
             }
         });
@@ -62,7 +68,7 @@ public class DashManagerActivity extends AppCompatActivity {
         ivOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(DashManagerActivity.this, AbsensiKeluarActivity.class);
+                Intent intent = new Intent(DashManagerActivity.this, AbsensiKeluarManagerActivity.class);
                 startActivity(intent);
             }
         });
@@ -91,6 +97,14 @@ public class DashManagerActivity extends AppCompatActivity {
             }
         });
 
+        ivProfil.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(DashManagerActivity.this, ProfilManagerActivity.class);
+                startActivity(intent);
+            }
+        });
+
 
         Calendar calendar = Calendar.getInstance();
         Date date = calendar.getTime();
@@ -111,6 +125,13 @@ public class DashManagerActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     ModelManager modelManager = snapshot.getValue(ModelManager.class);
+                    ModelProfil modelProfil = snapshot.getValue(ModelProfil.class);
+                    String urlFotoProfil = modelProfil.getUrl_foto_profil();
+                    if (urlFotoProfil != null) {
+                        Glide.with(DashManagerActivity.this)
+                                .load(urlFotoProfil)
+                                .into(ivProfil);
+                    }
                     username.setText(modelManager.getUsername());
                     jabatan.setText(modelManager.getJabatan());
                 }
